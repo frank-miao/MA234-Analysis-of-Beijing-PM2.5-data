@@ -3,3 +3,9 @@
 *.iml
 out
 gen
+kaggle/
+.vscode/
+.ipynb_checkpoints/
+month.pdf
+test.ipynb
+test.pdf
