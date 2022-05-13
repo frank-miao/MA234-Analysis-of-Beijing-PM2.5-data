@@ -1,10 +1,11 @@
 import numpy as np
+from tqdm import tqdm
 import pandas as pd
 from sklearn.metrics import r2_score
 
 from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor
-
+from sklearn import svm
 # 输入数据 返回模型预测值
 
 '''
@@ -13,7 +14,6 @@ param
 return 
     type tuple(model_name:str,train_score:str,test_score_str)
 '''
-
 
 # 目前默认只有r2的评价标准
 
@@ -124,9 +124,25 @@ def gradient_boosting_regressor(dataset_loader_np, flag_print=False):
     return model_evaluation_result
 
 
-def svr():
-    # 需要补充
-    pass
+def svr(dataset_loader_np, flag_print=False,param_c = 1.2):
+    model_name = 'svr'
+    X_train, y_train, X_test, y_test = dataset_loader_np[0], dataset_loader_np[1], dataset_loader_np[2], \
+                                       dataset_loader_np[3]
+
+    svr_model =svm.SVR(C=1.2)
+    svr_model.fit(X_train,y_train)
+    train_score = r2_score(y_train, svr_model.predict(X_train))
+    test_score = r2_score(y_test, svr_model.predict(X_test))
+
+    if flag_print:
+        # 打印当前的模型信息
+        print("The model is {0}".format(model_name))
+        print("The R2 score of train_dataset is {0}".format(train_score))
+        print("The R2 score of test_dataset is {0}".format(test_score))
+
+    model_evaluation_result = (model_name, train_score, test_score)
+
+    return model_evaluation_result
 
 '''
 model_selection_list str for model_name
@@ -134,7 +150,7 @@ model_selection_list str for model_name
 def model_evaluation(model_selection_list: list, csv_path, feature_str: list,print_flag = False):
     dataset_loader_np = csv_to_dataset_np(csv_path, feature_str)
     all_model_evaluation_result = []
-    for item in model_selection_list:
+    for item in tqdm(model_selection_list):
         single_model_evaluation_result = model_call(item,dataset_loader_np,print_flag)
         all_model_evaluation_result.append(single_model_evaluation_result)
 
@@ -156,6 +172,8 @@ def model_call(model_name: str,dataset_loader_np,print_flag = False):
         return extratrees_regressor(dataset_loader_np,print_flag)
     elif model_name == 'gradient_boosting_regressor':
         return gradient_boosting_regressor(dataset_loader_np,print_flag)
+    elif model_name == 'svr':
+        return svr(dataset_loader_np, print_flag)
 
 
 
@@ -205,9 +223,9 @@ def data_normalization(data):
 
 if __name__ == "__main__":
     model_selection_list = ['ordinary_regression','LASSO_regression','randomforest_regressor',
-                            'extratrees_regressor','gradient_boosting_regressor']
+                            'extratrees_regressor','gradient_boosting_regressor','svr']
     csv_path = './new_feature.csv'
     test = pd.read_csv(csv_path)
-    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir']
+    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir','feature1','feature2']
     model_evaluation(model_selection_list,csv_path,feature_str)
 
