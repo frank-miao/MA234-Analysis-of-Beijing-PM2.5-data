@@ -1,6 +1,8 @@
+import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 import pandas as pd
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.metrics import r2_score
 
 from sklearn.linear_model import LinearRegression, Lasso
@@ -14,6 +16,7 @@ param
 return 
     type tuple(model_name:str,train_score:str,test_score_str)
 '''
+
 
 # 目前默认只有r2的评价标准
 
@@ -160,6 +163,8 @@ def model_evaluation(model_selection_list: list, csv_path, feature_str: list,pri
         print("train_r2 is {0} ".format(item[1]),end="")
         print("test_r2 is {0}".format(item[2]))
 
+    return all_model_evaluation_result
+
 
 def model_call(model_name: str,dataset_loader_np,print_flag = False):
     if model_name == 'ordinary_regression':
@@ -176,6 +181,25 @@ def model_call(model_name: str,dataset_loader_np,print_flag = False):
         return svr(dataset_loader_np, print_flag)
 
 
+def compare_model(model_result_list: list):
+    model_name = []
+    train_r2 = []
+    test_r2 = []
+    for item1, item2, item3 in model_result_list:
+        model_name.append(item1)
+        train_r2.append(item2)
+        test_r2.append(item3)
+
+    bar_width = .35
+    x = np.arange(len(model_name))
+    plt.figure(figsize=(15, 10))
+    plt.bar(x, train_r2, bar_width, color='c', align='center', label='train r2')
+    plt.bar(x + bar_width, test_r2, bar_width, color='b', align='center', label='test r2')
+    plt.xlabel("models")
+    plt.ylabel("r2")
+    plt.xticks(x + bar_width / 2, model_name)
+    plt.legend()
+    plt.show()
 
 
 def csv_to_dataset_np(csv_path: str, feature_str: list):
@@ -184,25 +208,25 @@ def csv_to_dataset_np(csv_path: str, feature_str: list):
 
 
     dt = pd.read_csv(csv_path)
+    nan_index, non_nan_index = get_nan_index(dt)
 
-    dt = dt.dropna()
+    # dt = dt.dropna()
 
-    X_pd = dt.loc[:, feature_str]  # 'year','month','day','hour',
-    # X_pd = dt.loc[:, ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir']]
-    Y_pd = dt.loc[:, 'pm2.5']
+    train_dataset = []
+    test_dataset = []
 
-    # normalization
-    X_norm_pd = data_normalization(X_pd)
+    feature_str.insert(0, 'pm2.5')
 
-    X = X_norm_pd.values.astype(float)
-    Y = Y_pd.values.astype(int)
+    all_dataset = dt.loc[:, feature_str].values
 
-    Y = np.reshape(Y, (-1, 1))
+    for index, item in enumerate(non_nan_index):
+        if index % 7 == 6:
+            test_dataset.append(all_dataset[item])
+        else:
+            train_dataset.append(all_dataset[item])
 
-    X_test, y_test = X[[i for i in range(X.shape[0]) if i % 7 == 6]][:, 0:], Y[[i for i in range(Y.shape[0]) if
-                                                                                i % 7 == 6]][:, 0]
-    X_train, y_train = X[[i for i in range(X.shape[0]) if i % 7 != 6]][:, 0:], Y[[i for i in range(Y.shape[0]) if
-                                                                                  i % 7 != 6]][:, 0]
+    X_train, y_train = np.array(train_dataset)[:, 1:], np.array(train_dataset)[:, 0]
+    X_test, y_test = np.array(test_dataset)[:, 1:], np.array(test_dataset)[:, 0]
 
     # tuple 防止对训练集和测试集进行更改
     dataset_loader_np = (X_train, y_train, X_test, y_test)
@@ -211,14 +235,19 @@ def csv_to_dataset_np(csv_path: str, feature_str: list):
 
 
 def data_normalization(data):
-    # 获取所有数值型数据 注意 这里目前传递的是引用，非其它数据类型
-    numeric_features = data.dtypes[data.dtypes != 'object'].index
+    scaler = StandardScaler().fit(data)
 
-    data[numeric_features] = data[numeric_features].apply(lambda x: (x - x.mean()) / (x.std()))
     # 在标准化数据之后，所有均值消失，因此我们可以将缺失值设置为0
-    data[numeric_features] = data[numeric_features].fillna(0)
+    data = data.fillna(0)
 
-    return data
+    return scaler.transform(data), scaler
+
+
+def get_nan_index(data):
+    pm25_data = data.loc[:, "pm2.5"].values.reshape(-1, 1)
+    nan_index, _ = np.where(np.isnan(pm25_data))
+    non_nan_index, _ = np.where(~np.isnan(pm25_data))
+    return nan_index, non_nan_index
 
 
 if __name__ == "__main__":
@@ -226,6 +255,6 @@ if __name__ == "__main__":
                             'extratrees_regressor','gradient_boosting_regressor','svr']
     csv_path = './new_feature.csv'
     test = pd.read_csv(csv_path)
-    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir','feature1','feature2']
-    model_evaluation(model_selection_list,csv_path,feature_str)
-
+    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir']
+    a = model_evaluation(model_selection_list, csv_path, feature_str)
+    compare_model(a)
