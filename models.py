@@ -153,8 +153,9 @@ model_selection_list str for model_name
 '''
 
 
-def model_evaluation(model_selection_list: list, csv_path, feature_str: list, print_flag=False):
-    dataset_loader_np = csv_to_dataset_np(csv_path, feature_str)
+def model_evaluation(model_selection_list: list, csv_path, feature_str: list, non_normalization_feature: list = None,
+                     print_flag=False):
+    dataset_loader_np = csv_to_dataset_np(csv_path, feature_str, non_normalization_feature)
     all_model_evaluation_result = []
     for item in tqdm(model_selection_list):
         single_model_evaluation_result = model_call(item, dataset_loader_np, print_flag)
@@ -165,6 +166,8 @@ def model_evaluation(model_selection_list: list, csv_path, feature_str: list, pr
         print("The model is {0} ".format(item[0]), end="")
         print("train_r2 is {0} ".format(item[1]), end="")
         print("test_r2 is {0}".format(item[2]))
+
+    compare_model(all_model_evaluation_result)
 
     return all_model_evaluation_result
 
@@ -205,7 +208,7 @@ def compare_model(model_result_list: list):
     plt.show()
 
 
-def csv_to_dataset_np(csv_path: str, feature_str: list):
+def csv_to_dataset_np(csv_path: str, feature_str: list, non_normalization_feature: list = None):
     import numpy as np
     import pandas as pd
 
@@ -214,24 +217,31 @@ def csv_to_dataset_np(csv_path: str, feature_str: list):
 
     # dt = dt.dropna()
 
-    train_dataset = []
-    test_dataset = []
+    train_dataset_X, train_dataset_y = [], []
+    test_dataset_X, test_dataset_y = [], []
 
-    feature_str.insert(0, 'pm2.5')
+    removed_feature = feature_str.copy()
 
-    all_dataset = dt.loc[:, feature_str].values
-    temp_data, _ = data_normalization(all_dataset[:, 1:])
+    if non_normalization_feature:
+        for item in non_normalization_feature:
+            if item in feature_str:
+                removed_feature.remove(item)
 
-    all_dataset[:, 1:] = temp_data
+    all_dataset = dt.iloc[:, 6:]
+    temp_data, _ = data_normalization(all_dataset.loc[:, removed_feature])
+
+    all_dataset.loc[:, removed_feature] = temp_data
 
     for index, item in enumerate(non_nan_index):
         if index % 7 == 6:
-            test_dataset.append(all_dataset[item])
+            test_dataset_X.append(all_dataset.loc[item, feature_str].values)
+            test_dataset_y.append(all_dataset.loc[item, 'pm2.5'])
         else:
-            train_dataset.append(all_dataset[item])
+            train_dataset_X.append(all_dataset.loc[item, feature_str].values)
+            train_dataset_y.append(all_dataset.loc[item, 'pm2.5'])
 
-    X_train, y_train = np.array(train_dataset)[:, 1:], np.array(train_dataset)[:, 0]
-    X_test, y_test = np.array(test_dataset)[:, 1:], np.array(test_dataset)[:, 0]
+    X_train, y_train = np.array(train_dataset_X), np.array(train_dataset_y)
+    X_test, y_test = np.array(test_dataset_X), np.array(test_dataset_y)
 
     # tuple 防止对训练集和测试集进行更改
     dataset_loader_np = (X_train, y_train, X_test, y_test)
@@ -258,6 +268,6 @@ if __name__ == "__main__":
                             'extratrees_regressor', 'gradient_boosting_regressor', 'svr']
     csv_path = './new_feature.csv'
     test = pd.read_csv(csv_path)
-    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir']
-    a = model_evaluation(model_selection_list, csv_path, feature_str)
-    compare_model(a)
+    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir', 'feature 1']
+    non_normalization_feature = ['cbwd', 'feature 1']
+    model_evaluation(model_selection_list, csv_path, feature_str, non_normalization_feature)
