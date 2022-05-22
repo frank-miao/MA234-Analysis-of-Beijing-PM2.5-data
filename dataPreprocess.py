@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import copy
-import statsmodels.api as sm
 
 
 def read_file(file_path):
@@ -14,11 +13,11 @@ def standard_normalization(data: pd.DataFrame, selected_feature: list, non_norma
     normalization_feature = selected_feature.copy()
     if non_normalization_feature:
         for item in non_normalization_feature:
-            if item in non_normalization_feature:
+            if item in normalization_feature:
                 normalization_feature.remove(item)
 
     normalized_data = StandardScaler().fit_transform(data_copy[normalization_feature])
-    data_copy[normalized_data] = normalized_data
+    data_copy[normalization_feature] = normalized_data
     return data_copy
 
 
@@ -52,6 +51,4 @@ def clear_missing_value(data, clear=False):
 
 
 if __name__ == '__main__':
-    data = read_file('./PRSA_data.csv')
-    data = data_conversion(data)
     pass

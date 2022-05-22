@@ -8,6 +8,7 @@ from sklearn.metrics import r2_score
 from sklearn.linear_model import LinearRegression, Lasso
 from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor
 from sklearn import svm
+import dataPreprocess
 
 # 输入数据 返回模型预测值
 
@@ -213,24 +214,15 @@ def csv_to_dataset_np(csv_path: str, feature_str: list, non_normalization_featur
     import pandas as pd
 
     dt = pd.read_csv(csv_path)
-    nan_index, non_nan_index = get_nan_index(dt)
 
-    # dt = dt.dropna()
+    if type(dt['cbwd'][1]) is str:
+        dt = dataPreprocess.data_conversion(dt)
+    nan_index, non_nan_index = dataPreprocess.detect_missing_data(dt)
 
     train_dataset_X, train_dataset_y = [], []
     test_dataset_X, test_dataset_y = [], []
 
-    removed_feature = feature_str.copy()
-
-    if non_normalization_feature:
-        for item in non_normalization_feature:
-            if item in feature_str:
-                removed_feature.remove(item)
-
-    all_dataset = dt.iloc[:, 6:]
-    temp_data, _ = data_normalization(all_dataset.loc[:, removed_feature])
-
-    all_dataset.loc[:, removed_feature] = temp_data
+    all_dataset = dataPreprocess.standard_normalization(dt, feature_str, non_normalization_feature)
 
     for index, item in enumerate(non_nan_index):
         if index % 7 == 6:
@@ -249,25 +241,10 @@ def csv_to_dataset_np(csv_path: str, feature_str: list, non_normalization_featur
     return dataset_loader_np
 
 
-def data_normalization(data):
-    scaler = StandardScaler().fit(data)
-    data = scaler.transform(data)
-
-    return data, scaler
-
-
-def get_nan_index(data):
-    pm25_data = data.loc[:, "pm2.5"].values.reshape(-1, 1)
-    nan_index, _ = np.where(np.isnan(pm25_data))
-    non_nan_index, _ = np.where(~np.isnan(pm25_data))
-    return nan_index, non_nan_index
-
-
 if __name__ == "__main__":
     model_selection_list = ['ordinary_regression', 'LASSO_regression', 'randomforest_regressor',
-                            'extratrees_regressor', 'gradient_boosting_regressor', 'svr']
+                            'extratrees_regressor', 'gradient_boosting_regressor']
     csv_path = './new_feature.csv'
-    test = pd.read_csv(csv_path)
     feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir', 'feature 1']
     non_normalization_feature = ['cbwd', 'feature 1']
     model_evaluation(model_selection_list, csv_path, feature_str, non_normalization_feature)
