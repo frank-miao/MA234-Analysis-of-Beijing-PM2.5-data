@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.metrics import r2_score
 
-from sklearn.linear_model import LinearRegression, Lasso
+from sklearn.linear_model import LinearRegression, Lasso, Ridge
 from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor
 from sklearn import svm
 import dataPreprocess
@@ -56,6 +56,29 @@ def LASSO_regression(dataset_loader_np, flag_print=False):
     if flag_print:
         # 打印当前的模型信息
         print("The model is {0}".format('LASSO regression model'))
+        print("The R2 score of train_dataset is {0}".format(train_score))
+        print("The R2 score of test_dataset is {0}".format(test_score))
+
+    model_evaluation_result = (model_name, train_score, test_score)
+
+    return model_evaluation_result
+
+
+def ridge_regression(dataset_loader_np, flag_print=False):
+
+    model_name = 'ridge_regression'
+    selected_variable_lasso = []
+
+    X_train, y_train, X_test, y_test = dataset_loader_np[0], dataset_loader_np[1], dataset_loader_np[2], \
+                                       dataset_loader_np[3]
+
+    ridge_regression_model = Ridge().fit(X_train, y_train)
+    train_score = r2_score(y_train, ridge_regression_model.predict(X_train))
+    test_score = r2_score(y_test, ridge_regression_model.predict(X_test))
+
+    if flag_print:
+        # 打印当前的模型信息
+        print("The model is {0}".format('ridge regression model'))
         print("The R2 score of train_dataset is {0}".format(train_score))
         print("The R2 score of test_dataset is {0}".format(test_score))
 
@@ -214,6 +237,7 @@ def csv_to_dataset_np(csv_path: str, feature_str: list, non_normalization_featur
     import pandas as pd
 
     dt = pd.read_csv(csv_path)
+    nan_index, non_nan_index = get_nan_index(dt)
 
     if type(dt['cbwd'][1]) is str:
         dt = dataPreprocess.data_conversion(dt)
