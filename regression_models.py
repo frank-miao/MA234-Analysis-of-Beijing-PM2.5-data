@@ -22,7 +22,7 @@ return
 
 
 def ordinary_regression(dataset_loader_np, flag_print=False):
-    model_name = 'ordinary_regression'
+    model_name = 'ordinary regression'
     X_train, y_train, X_test, y_test = dataset_loader_np
     ordinary_regression_model = LinearRegression().fit(X_train, y_train)
     train_score = r2_score(y_train, ordinary_regression_model.predict(X_train))
@@ -40,7 +40,7 @@ def ordinary_regression(dataset_loader_np, flag_print=False):
 
 
 def LASSO_regression(dataset_loader_np, flag_print=False):
-    model_name = 'LASSO_regression'
+    model_name = 'LASSO regression'
 
     X_train, y_train, X_test, y_test = dataset_loader_np
 
@@ -60,7 +60,7 @@ def LASSO_regression(dataset_loader_np, flag_print=False):
 
 
 def ridge_regression(dataset_loader_np, flag_print=False):
-    model_name = 'ridge_regression'
+    model_name = 'ridge regression'
     selected_variable_lasso = []
 
     X_train, y_train, X_test, y_test = dataset_loader_np
@@ -81,7 +81,7 @@ def ridge_regression(dataset_loader_np, flag_print=False):
 
 
 def random_forest_regressor(dataset_loader_np, flag_print=False):
-    model_name = 'random_forest_regressor'
+    model_name = 'random forest regressor'
     X_train, y_train, X_test, y_test = dataset_loader_np
 
     random_forest_regressor_model = RandomForestRegressor().fit(X_train, y_train)
@@ -100,7 +100,7 @@ def random_forest_regressor(dataset_loader_np, flag_print=False):
 
 
 def extra_trees_regressor(dataset_loader_np, flag_print=False):
-    model_name = 'extra_trees_regressor'
+    model_name = 'extra trees regressor'
     X_train, y_train, X_test, y_test = dataset_loader_np
 
     extra_trees_regressor_model = ExtraTreesRegressor().fit(X_train, y_train)
@@ -181,15 +181,15 @@ def model_evaluation(model_selection_list: list, csv_path, feature_str: list, no
 
 
 def model_call(model_name: str, dataset_loader_np, print_flag=False):
-    if model_name == 'ordinary_regression':
+    if model_name == 'ordinary regression':
         return ordinary_regression(dataset_loader_np, print_flag)
-    elif model_name == 'LASSO_regression':
+    elif model_name == 'LASSO regression':
         return LASSO_regression(dataset_loader_np, print_flag)
-    elif model_name == 'random_forest_regressor':
+    elif model_name == 'random forest regressor':
         return random_forest_regressor(dataset_loader_np, print_flag)
-    elif model_name == 'extra_trees_regressor':
+    elif model_name == 'extra trees regressor':
         return extra_trees_regressor(dataset_loader_np, print_flag)
-    elif model_name == 'gradient_boosting_regressor':
+    elif model_name == 'gradient boosting regressor':
         return gradient_boosting_regressor(dataset_loader_np, print_flag)
     elif model_name == 'svr':
         return svr(dataset_loader_np, print_flag)
@@ -222,8 +222,8 @@ if __name__ == "__main__":
     Gradient Boosting regressor, SVR
     '''
 
-    model_selection_list = ['ordinary_regression', 'LASSO_regression', 'random_forest_regressor',
-                            'extra_trees_regressor', 'gradient_boosting_regressor']
+    model_selection_list = ['ordinary regression', 'LASSO regression', 'random forest regressor',
+                            'extra trees regressor', 'gradient boosting regressor']
     csv_path = './new_feature.csv'
     feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir', 'feature 1']
     non_normalization_feature = ['cbwd', 'feature 1']

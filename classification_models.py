@@ -38,3 +38,7 @@ def svm_classification(dataset_loader, print_flag=False):
     model_evaluation_result = (model_name, f1_train, f1_test)
 
     return model_evaluation_result
+
+
+def decision_tree_classification(data_loader,print_flag=False):
+    model_name='decision tree'
