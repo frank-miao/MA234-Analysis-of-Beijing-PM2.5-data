@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import dataPreprocess
+import data_preprocess
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
 from sklearn.metrics import f1_score

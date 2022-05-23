@@ -9,7 +9,7 @@ def read_file(file_path) -> pd.DataFrame:
     return pd.read_csv(file_path)
 
 
-def standard_normalization(data: pd.DataFrame, selected_feature: list, non_normalization_feature: list = None):
+def standard_normalization(data: pd.DataFrame, selected_feature: list, non_normalization_feature: list = None) -> pd.DataFrame:
     data_copy = copy.deepcopy(data)
     normalization_feature = selected_feature.copy()
     if non_normalization_feature:
@@ -31,7 +31,7 @@ def detect_missing_data(data: pd.DataFrame):
 
 def data_conversion(data: pd.DataFrame) -> pd.DataFrame:
     data_copy = copy.deepcopy(data)
-    cbwd_one_hot = dict(zip(set(data_copy['cbwd']), range(4)))
+    cbwd_one_hot = dict(zip(set(data_copy['cbwd']), range(4))) # FIXME 这里的range应该是(1,5) 特征的值是0的话权重值就没有用了 0*any_value = 0
     cbwd_one_hot_inverse = dict(zip(range(4), set(data_copy['cbwd'])))
 
     X_cbwd = copy.deepcopy(data_copy['cbwd'].values)
@@ -40,7 +40,15 @@ def data_conversion(data: pd.DataFrame) -> pd.DataFrame:
         X_cbwd_new[i] = cbwd_one_hot[item]
 
     data_copy['cbwd'] = X_cbwd_new
+    data_copy['cbwd'] = data_copy['cbwd'].astype(np.int64)
     return data_copy
+
+# TODO data_conversion 函数 有一个简写的方法
+# def data_conversion(data: pd.DataFrame) -> pd.DataFrame:
+#     data_copy = copy.deepcopy(data)
+#     cbwd_dict = dict(zip(set(data_copy['cbwd']), range(1,5)))
+#     data_copy['cbwd'] = data_copy['cbwd'].apply(lambda x: cbwd_dict[x])
+#     return data_copy
 
 
 def clear_missing_value(data: pd.DataFrame, clear=False) -> pd.DataFrame:
@@ -87,6 +95,7 @@ def data_partition(data_pd: pd.DataFrame) -> pd.DataFrame:
     # low_pm_state 1 polluting episode 2 very high PM 3
     return data_pd_copy
 
+
 def data_pm_partition_cal(single_pm25):
     if single_pm25 <= PmState.PARTITION_BETWEEN_LOW_POLLUTING.value:
         return PmState.LOW_PM_STATE.value
@@ -96,7 +105,7 @@ def data_pm_partition_cal(single_pm25):
         return PmState.VERY_HIGH_PM_STATE.value
 
 
-def classification_data_loader(data_pd: pd.DataFrame) -> tuple:
+def classification_dataloader(csv_path: str, selected_feature: list, non_normalization_feature: list = None) -> tuple:
     hour_map_dict = {
         0: 1,
         1: 1,
@@ -123,12 +132,14 @@ def classification_data_loader(data_pd: pd.DataFrame) -> tuple:
         22: 8,
         23: 8,
     }
-    cbwd_dict = dict(zip(set(data_pd['cbwd']), range(4)))
-    data_pd_copy = copy.deepcopy(data_pd)
+    data_pd_copy = pd.read_csv(csv_path)
+    data_pd_copy = data_conversion(data_pd_copy)
+    data_pd_copy = standard_normalization(data_pd_copy, selected_feature, non_normalization_feature)
+
     data_pd_copy['hour'] = data_pd_copy['hour'].apply(lambda single_hour: hour_map_dict[single_hour])
-    data_pd_copy['cbwd'] = data_pd_copy['cbwd'].apply(lambda x: cbwd_dict[x])
     data_pd_copy_groupby = data_pd_copy.groupby(
         [data_pd_copy['year'], data_pd_copy['month'], data_pd_copy['day'], data_pd_copy['hour']])
+
     pm25_series = data_pd_copy_groupby['pm2.5'].aggregate(handle_group_by)
     result_pd = data_pd_copy_groupby.mean()
     result_pd['pm2.5'] = pm25_series
@@ -136,11 +147,13 @@ def classification_data_loader(data_pd: pd.DataFrame) -> tuple:
     result_pd = data_partition(result_pd)
     result_pd = result_pd.dropna().reset_index()
     result_pd.drop('No', axis=1, inplace=True)
-    X = result_pd.drop('pm2.5', axis=1)
+
+    X = result_pd[selected_feature]
     y = result_pd[['pm2.5']]
     X_y = (X, y)
 
     return X_y
+
 
 def handle_group_by(data):
     n = 3
@@ -157,5 +170,8 @@ def handle_group_by(data):
 
 
 if __name__ == '__main__':
-    pass
+    csv_path = './backup/PRSA_data_raw.csv' # FIXME 换成自己的路径
+    selected_feature = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir']
+    non_normalization_feature = ['cbwd']
+    X_y = classification_dataloader(csv_path,selected_feature,non_normalization_feature)
 
