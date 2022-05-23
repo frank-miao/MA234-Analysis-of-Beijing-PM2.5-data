@@ -135,12 +135,9 @@ def classification_data_loader(data_pd: pd.DataFrame) -> tuple:
     result_pd['cbwd'] = result_pd['cbwd'].apply(lambda single_cbwd: round(single_cbwd, 0))
     result_pd = data_partition(result_pd)
     result_pd = result_pd.dropna().reset_index()
-
     result_pd.drop('No', axis=1, inplace=True)
-
-
     X = result_pd.drop('pm2.5', axis=1)
-    y = result_pd['pm2.5']
+    y = result_pd[['pm2.5']]
     X_y = (X, y)
 
     return X_y
@@ -160,6 +157,5 @@ def handle_group_by(data):
 
 
 if __name__ == '__main__':
-    data_pd = read_file('./backup/PRSA_data_raw.csv')
-    data_pd_2 = classification_data_loader(data_pd)
-    data_pd_2.to_csv("testtter.csv")
+    pass
+
