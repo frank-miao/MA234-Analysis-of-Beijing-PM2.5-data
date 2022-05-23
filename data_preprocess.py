@@ -87,7 +87,6 @@ def data_partition(data_pd: pd.DataFrame) -> pd.DataFrame:
     # low_pm_state 1 polluting episode 2 very high PM 3
     return data_pd_copy
 
-
 def data_pm_partition_cal(single_pm25):
     if single_pm25 <= PmState.PARTITION_BETWEEN_LOW_POLLUTING.value:
         return PmState.LOW_PM_STATE.value
@@ -97,7 +96,7 @@ def data_pm_partition_cal(single_pm25):
         return PmState.VERY_HIGH_PM_STATE.value
 
 
-def classification_data_loader(data_pd: pd.DataFrame) -> pd.DataFrame:
+def classification_data_loader(data_pd: pd.DataFrame) -> tuple:
     hour_map_dict = {
         0: 1,
         1: 1,
@@ -126,36 +125,38 @@ def classification_data_loader(data_pd: pd.DataFrame) -> pd.DataFrame:
     }
     cbwd_dict = dict(zip(set(data_pd['cbwd']), range(4)))
     data_pd_copy = copy.deepcopy(data_pd)
-    data_pd_copy['pm2.5'] = data_pd_copy['pm2.5'].fillna(0)
     data_pd_copy['hour'] = data_pd_copy['hour'].apply(lambda single_hour: hour_map_dict[single_hour])
     data_pd_copy['cbwd'] = data_pd_copy['cbwd'].apply(lambda x: cbwd_dict[x])
-    data_pd_copy_groupby = data_pd_copy.groupby([data_pd_copy['year'],data_pd_copy['month'],data_pd_copy['day'],data_pd_copy['hour']])
-    pm25_series =  data_pd_copy_groupby['pm2.5'].aggregate(handle_group_by)
+    data_pd_copy_groupby = data_pd_copy.groupby(
+        [data_pd_copy['year'], data_pd_copy['month'], data_pd_copy['day'], data_pd_copy['hour']])
+    pm25_series = data_pd_copy_groupby['pm2.5'].aggregate(handle_group_by)
     result_pd = data_pd_copy_groupby.mean()
     result_pd['pm2.5'] = pm25_series
     result_pd['cbwd'] = result_pd['cbwd'].apply(lambda single_cbwd: round(single_cbwd, 0))
     result_pd = data_partition(result_pd)
-    result_pd.drop('No',axis = 1,inplace = True)
+    result_pd = result_pd.dropna().reset_index()
 
-    X = result_pd
+    result_pd.drop('No', axis=1, inplace=True)
+
+
+    X = result_pd.drop('pm2.5', axis=1)
     y = result_pd['pm2.5']
-    X_y = (X,y)
+    X_y = (X, y)
+
     return X_y
 
 def handle_group_by(data):
     n = 3
     sum = 0
-    for i,item in enumerate(data):
+    for i, item in enumerate(data):
         sum += item
-        if item == 0:
+        if np.isnan(item):
             n -= 1
 
     if n == 0:
-        return 0
+        return np.nan
     else:
         return sum / n
-
-
 
 
 if __name__ == '__main__':
