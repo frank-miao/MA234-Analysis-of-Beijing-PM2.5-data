@@ -28,7 +28,7 @@ def detect_missing_data(data: pd.DataFrame):
     return nan_index, non_nan_index
 
 
-def data_conversion(data):
+def data_conversion(data:pd.DataFrame):
     data_copy = copy.deepcopy(data)
     cbwd_one_hot = dict(zip(set(data_copy['cbwd']), range(4)))
     cbwd_one_hot_inverse = dict(zip(range(4), set(data_copy['cbwd'])))
@@ -48,6 +48,35 @@ def clear_missing_value(data, clear=False):
         nan_index, non_nan_index = detect_missing_data(data)
         data_copy = data_copy[non_nan_index]
     return data_copy
+
+
+def regression_dataloader(csv_path: str, selected_feature: list, non_normalization_feature: list = None):
+    dt = pd.read_csv(csv_path)
+
+    if type(dt['cbwd'][1]) is str:
+        dt = data_conversion(dt)
+    nan_index, non_nan_index = detect_missing_data(dt)
+
+    train_dataset_X, train_dataset_y = [], []
+    test_dataset_X, test_dataset_y = [], []
+
+    all_dataset = standard_normalization(dt, selected_feature, non_normalization_feature)
+
+    for index, item in enumerate(non_nan_index):
+        if index % 7 == 6:
+            test_dataset_X.append(all_dataset.loc[item, selected_feature].values)
+            test_dataset_y.append(all_dataset.loc[item, 'pm2.5'])
+        else:
+            train_dataset_X.append(all_dataset.loc[item, selected_feature].values)
+            train_dataset_y.append(all_dataset.loc[item, 'pm2.5'])
+
+    X_train, y_train = np.array(train_dataset_X), np.array(train_dataset_y)
+    X_test, y_test = np.array(test_dataset_X), np.array(test_dataset_y)
+
+    # tuple 防止对训练集和测试集进行更改
+    dataset_loader_np = (X_train, y_train, X_test, y_test)
+
+    return dataset_loader_np
 
 
 if __name__ == '__main__':

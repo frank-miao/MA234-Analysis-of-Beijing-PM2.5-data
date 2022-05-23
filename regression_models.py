@@ -1,13 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from tqdm import tqdm
-import pandas as pd
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sklearn.metrics import r2_score
-
-from sklearn.linear_model import LinearRegression, Lasso, Ridge
-from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor
 from sklearn import svm
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor
+from sklearn.linear_model import LinearRegression, Lasso, Ridge
+from sklearn.metrics import r2_score
+from tqdm import tqdm
+
 import dataPreprocess
 
 # 输入数据 返回模型预测值
@@ -25,8 +23,7 @@ return
 
 def ordinary_regression(dataset_loader_np, flag_print=False):
     model_name = 'ordinary_regression'
-    X_train, y_train, X_test, y_test = dataset_loader_np[0], dataset_loader_np[1], dataset_loader_np[2], \
-                                       dataset_loader_np[3]
+    X_train, y_train, X_test, y_test = dataset_loader_np
     ordinary_regression_model = LinearRegression().fit(X_train, y_train)
     train_score = r2_score(y_train, ordinary_regression_model.predict(X_train))
     test_score = r2_score(y_test, ordinary_regression_model.predict(X_test))
@@ -44,10 +41,8 @@ def ordinary_regression(dataset_loader_np, flag_print=False):
 
 def LASSO_regression(dataset_loader_np, flag_print=False):
     model_name = 'LASSO_regression'
-    selected_variable_lasso = []
 
-    X_train, y_train, X_test, y_test = dataset_loader_np[0], dataset_loader_np[1], dataset_loader_np[2], \
-                                       dataset_loader_np[3]
+    X_train, y_train, X_test, y_test = dataset_loader_np
 
     LASSO_regression_model = Lasso().fit(X_train, y_train)
     train_score = r2_score(y_train, LASSO_regression_model.predict(X_train))
@@ -55,7 +50,7 @@ def LASSO_regression(dataset_loader_np, flag_print=False):
 
     if flag_print:
         # 打印当前的模型信息
-        print("The model is {0}".format('LASSO regression model'))
+        print("The model is {0}".format(model_name))
         print("The R2 score of train_dataset is {0}".format(train_score))
         print("The R2 score of test_dataset is {0}".format(test_score))
 
@@ -65,12 +60,10 @@ def LASSO_regression(dataset_loader_np, flag_print=False):
 
 
 def ridge_regression(dataset_loader_np, flag_print=False):
-
     model_name = 'ridge_regression'
     selected_variable_lasso = []
 
-    X_train, y_train, X_test, y_test = dataset_loader_np[0], dataset_loader_np[1], dataset_loader_np[2], \
-                                       dataset_loader_np[3]
+    X_train, y_train, X_test, y_test = dataset_loader_np
 
     ridge_regression_model = Ridge().fit(X_train, y_train)
     train_score = r2_score(y_train, ridge_regression_model.predict(X_train))
@@ -78,7 +71,7 @@ def ridge_regression(dataset_loader_np, flag_print=False):
 
     if flag_print:
         # 打印当前的模型信息
-        print("The model is {0}".format('ridge regression model'))
+        print("The model is {0}".format(model_name))
         print("The R2 score of train_dataset is {0}".format(train_score))
         print("The R2 score of test_dataset is {0}".format(test_score))
 
@@ -87,19 +80,17 @@ def ridge_regression(dataset_loader_np, flag_print=False):
     return model_evaluation_result
 
 
-def randomforest_regressor(dataset_loader_np, flag_print=False):
-    model_name = 'randomforest_regressor'
-    X_train, y_train, X_test, y_test = dataset_loader_np[0], dataset_loader_np[1], dataset_loader_np[2], \
-                                       dataset_loader_np[3]
+def random_forest_regressor(dataset_loader_np, flag_print=False):
+    model_name = 'random_forest_regressor'
+    X_train, y_train, X_test, y_test = dataset_loader_np
 
-    randomforest_regressor_model = RandomForestRegressor()
-    randomforest_regressor_model.fit(X_train, y_train)
-    train_score = r2_score(y_train, randomforest_regressor_model.predict(X_train))
-    test_score = r2_score(y_test, randomforest_regressor_model.predict(X_test))
+    random_forest_regressor_model = RandomForestRegressor().fit(X_train, y_train)
+    train_score = r2_score(y_train, random_forest_regressor_model.predict(X_train))
+    test_score = r2_score(y_test, random_forest_regressor_model.predict(X_test))
 
     if flag_print:
         # 打印当前的模型信息
-        print("The model is {0}".format('randomforest regressor model'))
+        print("The model is {0}".format(model_name))
         print("The R2 score of train_dataset is {0}".format(train_score))
         print("The R2 score of test_dataset is {0}".format(test_score))
 
@@ -108,19 +99,17 @@ def randomforest_regressor(dataset_loader_np, flag_print=False):
     return model_evaluation_result
 
 
-def extratrees_regressor(dataset_loader_np, flag_print=False):
-    model_name = 'extratrees_regressor'
-    X_train, y_train, X_test, y_test = dataset_loader_np[0], dataset_loader_np[1], dataset_loader_np[2], \
-                                       dataset_loader_np[3]
+def extra_trees_regressor(dataset_loader_np, flag_print=False):
+    model_name = 'extra_trees_regressor'
+    X_train, y_train, X_test, y_test = dataset_loader_np
 
-    extratrees_regressor_model = ExtraTreesRegressor()
-    extratrees_regressor_model.fit(X_train, y_train)
-    train_score = r2_score(y_train, extratrees_regressor_model.predict(X_train))
-    test_score = r2_score(y_test, extratrees_regressor_model.predict(X_test))
+    extra_trees_regressor_model = ExtraTreesRegressor().fit(X_train, y_train)
+    train_score = r2_score(y_train, extra_trees_regressor_model.predict(X_train))
+    test_score = r2_score(y_test, extra_trees_regressor_model.predict(X_test))
 
     if flag_print:
         # 打印当前的模型信息
-        print("The model is {0}".format('extratrees regressor model'))
+        print("The model is {0}".format(model_name))
         print("The R2 score of train_dataset is {0}".format(train_score))
         print("The R2 score of test_dataset is {0}".format(test_score))
 
@@ -130,13 +119,10 @@ def extratrees_regressor(dataset_loader_np, flag_print=False):
 
 
 def gradient_boosting_regressor(dataset_loader_np, flag_print=False):
-    model_name = 'gradient_boosting_regressor'
-    X_train, y_train, X_test, y_test = dataset_loader_np[0], dataset_loader_np[1], dataset_loader_np[2], \
-                                       dataset_loader_np[3]
+    X_train, y_train, X_test, y_test = dataset_loader_np
 
     model_name = 'gradient boosting regressor'
-    gradient_boosting_regressor_model = GradientBoostingRegressor()
-    gradient_boosting_regressor_model.fit(X_train, y_train)
+    gradient_boosting_regressor_model = GradientBoostingRegressor().fit(X_train, y_train)
     train_score = r2_score(y_train, gradient_boosting_regressor_model.predict(X_train))
     test_score = r2_score(y_test, gradient_boosting_regressor_model.predict(X_test))
 
@@ -153,11 +139,9 @@ def gradient_boosting_regressor(dataset_loader_np, flag_print=False):
 
 def svr(dataset_loader_np, flag_print=False, param_c=1.2):
     model_name = 'svr'
-    X_train, y_train, X_test, y_test = dataset_loader_np[0], dataset_loader_np[1], dataset_loader_np[2], \
-                                       dataset_loader_np[3]
+    X_train, y_train, X_test, y_test = dataset_loader_np
 
-    svr_model = svm.SVR(C=param_c)
-    svr_model.fit(X_train, y_train)
+    svr_model = svm.SVR(C=param_c).fit(X_train, y_train)
     train_score = r2_score(y_train, svr_model.predict(X_train))
     test_score = r2_score(y_test, svr_model.predict(X_test))
 
@@ -179,7 +163,7 @@ model_selection_list str for model_name
 
 def model_evaluation(model_selection_list: list, csv_path, feature_str: list, non_normalization_feature: list = None,
                      print_flag=False):
-    dataset_loader_np = csv_to_dataset_np(csv_path, feature_str, non_normalization_feature)
+    dataset_loader_np = dataPreprocess.regression_dataloader(csv_path, feature_str, non_normalization_feature)
     all_model_evaluation_result = []
     for item in tqdm(model_selection_list):
         single_model_evaluation_result = model_call(item, dataset_loader_np, print_flag)
@@ -201,10 +185,10 @@ def model_call(model_name: str, dataset_loader_np, print_flag=False):
         return ordinary_regression(dataset_loader_np, print_flag)
     elif model_name == 'LASSO_regression':
         return LASSO_regression(dataset_loader_np, print_flag)
-    elif model_name == 'randomforest_regressor':
-        return randomforest_regressor(dataset_loader_np, print_flag)
-    elif model_name == 'extratrees_regressor':
-        return extratrees_regressor(dataset_loader_np, print_flag)
+    elif model_name == 'random_forest_regressor':
+        return random_forest_regressor(dataset_loader_np, print_flag)
+    elif model_name == 'extra_trees_regressor':
+        return extra_trees_regressor(dataset_loader_np, print_flag)
     elif model_name == 'gradient_boosting_regressor':
         return gradient_boosting_regressor(dataset_loader_np, print_flag)
     elif model_name == 'svr':
@@ -232,42 +216,14 @@ def compare_model(model_result_list: list):
     plt.show()
 
 
-def csv_to_dataset_np(csv_path: str, feature_str: list, non_normalization_feature: list = None):
-    import numpy as np
-    import pandas as pd
-
-    dt = pd.read_csv(csv_path)
-    nan_index, non_nan_index = get_nan_index(dt)
-
-    if type(dt['cbwd'][1]) is str:
-        dt = dataPreprocess.data_conversion(dt)
-    nan_index, non_nan_index = dataPreprocess.detect_missing_data(dt)
-
-    train_dataset_X, train_dataset_y = [], []
-    test_dataset_X, test_dataset_y = [], []
-
-    all_dataset = dataPreprocess.standard_normalization(dt, feature_str, non_normalization_feature)
-
-    for index, item in enumerate(non_nan_index):
-        if index % 7 == 6:
-            test_dataset_X.append(all_dataset.loc[item, feature_str].values)
-            test_dataset_y.append(all_dataset.loc[item, 'pm2.5'])
-        else:
-            train_dataset_X.append(all_dataset.loc[item, feature_str].values)
-            train_dataset_y.append(all_dataset.loc[item, 'pm2.5'])
-
-    X_train, y_train = np.array(train_dataset_X), np.array(train_dataset_y)
-    X_test, y_test = np.array(test_dataset_X), np.array(test_dataset_y)
-
-    # tuple 防止对训练集和测试集进行更改
-    dataset_loader_np = (X_train, y_train, X_test, y_test)
-
-    return dataset_loader_np
-
-
 if __name__ == "__main__":
-    model_selection_list = ['ordinary_regression', 'LASSO_regression', 'randomforest_regressor',
-                            'extratrees_regressor', 'gradient_boosting_regressor']
+    '''
+    Models include ordinary regression, LASSO regression, Random Forest regressor, Extra trees regressor, \
+    Gradient Boosting regressor, SVR
+    '''
+
+    model_selection_list = ['ordinary_regression', 'LASSO_regression', 'random_forest_regressor',
+                            'extra_trees_regressor', 'gradient_boosting_regressor']
     csv_path = './new_feature.csv'
     feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir', 'feature 1']
     non_normalization_feature = ['cbwd', 'feature 1']
