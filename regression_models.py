@@ -162,11 +162,11 @@ model_selection_list str for model_name
 
 
 def model_evaluation(model_selection_list: list, csv_path, feature_str: list, non_normalization_feature: list = None,
-                     print_flag=False):
+                     plot_flag=False):
     dataset_loader_np = data_preprocess.regression_dataloader(csv_path, feature_str, non_normalization_feature)
     all_model_evaluation_result = []
     for item in tqdm(model_selection_list):
-        single_model_evaluation_result = model_call(item, dataset_loader_np, print_flag)
+        single_model_evaluation_result = model_call(item, dataset_loader_np)
         all_model_evaluation_result.append(single_model_evaluation_result)
 
     # print part
@@ -175,7 +175,8 @@ def model_evaluation(model_selection_list: list, csv_path, feature_str: list, no
         print("train_r2 is {0} ".format(item[1]), end="")
         print("test_r2 is {0}".format(item[2]))
 
-    compare_model(all_model_evaluation_result)
+    if plot_flag:
+        compare_model(all_model_evaluation_result)
 
     return all_model_evaluation_result
 
@@ -225,6 +226,6 @@ if __name__ == "__main__":
     model_selection_list = ['ordinary regression', 'LASSO regression', 'random forest regressor',
                             'extra trees regressor', 'gradient boosting regressor']
     csv_path = './new_feature.csv'
-    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir', 'feature 1']
+    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'feature 1']
     non_normalization_feature = ['cbwd', 'feature 1']
-    model_evaluation(model_selection_list, csv_path, feature_str, non_normalization_feature)
+    model_evaluation(model_selection_list, csv_path, feature_str, non_normalization_feature, plot_flag=False)
