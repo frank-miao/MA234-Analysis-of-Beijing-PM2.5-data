@@ -167,7 +167,7 @@ def classification_dataloader(csv_path: str, selected_feature: list, non_normali
     X = result_pd[selected_feature]
     y = result_pd[['pm2.5']]
 
-    return (X, y)
+    return X, y
 
 
 if __name__ == '__main__':

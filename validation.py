@@ -19,7 +19,7 @@ def classification_cv(dataset, classification_model):
 
     f1_train_mean = sum(f1_score_train) / len(f1_score_train)
     f1_test_mean = sum(f1_score_test) / len(f1_score_test)
-    print('The average f1 score of train dataset is ' + str(f1_train_mean))
+    print('The average f1 score of train dataset is ' + str(f1_train_mean), end=' ')
     print('The average f1 score of test dataset is ' + str(f1_test_mean))
     return f1_train_mean, f1_test_mean
 
@@ -35,4 +35,4 @@ if __name__ == '__main__':
     non_normalization_feature = ['cbwd', 'feature 1']
     dataloader = data_preprocess.classification_dataloader('new_feature.csv', selected_feature=feature_str,
                                                            non_normalization_feature=non_normalization_feature)
-    print(classification_cv(dataloader, classification_models.svm_classification))
+    classification_cv(dataloader, classification_models.svm_classification)
