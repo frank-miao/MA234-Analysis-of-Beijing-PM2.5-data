@@ -1,0 +1,10 @@
+from enum import Enum
+
+
+class PmState(Enum):
+    LOW_PM_STATE = 1
+    POLLUTING_EPISODE = 2
+    VERY_HIGH_PM_STATE = 3
+    PARTITION_BETWEEN_LOW_POLLUTING = 35 # [0,35]
+    PARTITION_BETWEEN_POLLUTING_HIGH = 150 # (35,150]
+

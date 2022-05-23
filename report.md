@@ -63,11 +63,11 @@ Implemented by `sklearn.svm`
 
 
 
-## Feature selection and Model selection
+## Feature selection and Model selection and Feature creation
 
 ### Feature selection
 
-
+### Feature creation
 
 ### Model selection
 

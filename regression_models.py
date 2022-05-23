@@ -6,7 +6,7 @@ from sklearn.linear_model import LinearRegression, Lasso, Ridge
 from sklearn.metrics import r2_score
 from tqdm import tqdm
 
-import dataPreprocess
+import data_preprocess
 
 # 输入数据 返回模型预测值
 
@@ -163,7 +163,7 @@ model_selection_list str for model_name
 
 def model_evaluation(model_selection_list: list, csv_path, feature_str: list, non_normalization_feature: list = None,
                      print_flag=False):
-    dataset_loader_np = dataPreprocess.regression_dataloader(csv_path, feature_str, non_normalization_feature)
+    dataset_loader_np = data_preprocess.regression_dataloader(csv_path, feature_str, non_normalization_feature)
     all_model_evaluation_result = []
     for item in tqdm(model_selection_list):
         single_model_evaluation_result = model_call(item, dataset_loader_np, print_flag)
