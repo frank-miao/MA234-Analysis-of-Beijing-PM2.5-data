@@ -2,6 +2,9 @@ from sklearn.model_selection import KFold
 import data_preprocess
 import classification_models
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+import numpy as np
+import regression_models
 
 
 def classification_cv(dataset, classification_model):
@@ -25,9 +28,80 @@ def classification_cv(dataset, classification_model):
 
 
 def model_evaluation(model_selection_list: list, csv_path, feature_str: list, non_normalization_feature: list = None,
-                     plot_flag=False):
-    # TODO: 仿照回归模型明天补完
-    pass
+                     plot_flag=False, task='Regression'):
+    data_loader = None
+    label = ''
+    if task in ['Regression', 'regression']:
+        data_loader = data_preprocess.regression_dataloader(csv_path, feature_str, non_normalization_feature)
+        label = 'r2'
+    elif task in ['classification', 'Classification']:
+        data_loader = data_preprocess.classification_dataloader(csv_path, feature_str,
+                                                                non_normalization_feature)
+        label = 'f1'
+    all_model_evaluation_result = []
+    for item in tqdm(model_selection_list):
+        single_model_evaluation_result = model_call(model_name=item, dataloader=data_loader)
+        all_model_evaluation_result.append(single_model_evaluation_result)
+
+    for item in all_model_evaluation_result:
+        print("The model is {0} ".format(item[0]), end="")
+        print("train " + label + " score is " + str(item[1]), end="")
+        print("test " + label + " score is " + str(item[2]))
+
+    if plot_flag:
+        compare_model_plot(all_model_evaluation_result, task)
+
+
+def model_call(model_name: str, dataloader, print_flag=False):
+    if model_name == 'KNN':
+        return classification_models.KNN_classification(dataloader, print_flag)
+    elif model_name in ['svm', 'SVM']:
+        return classification_models.svm_classification(dataloader, print_flag)
+    elif model_name in ['lda', 'LDA']:
+        return classification_models.LDA_classification(dataloader, print_flag)
+    elif model_name in ['decision tree']:
+        return classification_models.decision_tree_classification(dataloader, print_flag)
+    elif model_name in ['logistic regression', 'logistic']:
+        return classification_models.logistic_regression_classification(dataloader, print_flag)
+    elif model_name == 'ordinary regression':
+        return regression_models.ordinary_regression(dataloader, print_flag)
+    elif model_name == 'LASSO regression':
+        return regression_models.LASSO_regression(dataloader, print_flag)
+    elif model_name == 'random forest regressor':
+        return regression_models.random_forest_regressor(dataloader, print_flag)
+    elif model_name == 'extra trees regressor':
+        return regression_models.extra_trees_regressor(dataloader, print_flag)
+    elif model_name == 'gradient boosting regressor':
+        return regression_models.gradient_boosting_regressor(dataloader, print_flag)
+    elif model_name == 'svr':
+        return regression_models.svr(dataloader, print_flag)
+
+
+def compare_model_plot(model_result_list: list, task='Regression'):
+    label = ''
+    if task in ['Regression', 'regression']:
+        label = 'r2 score'
+    elif task in ['Classification', 'classification']:
+        label = 'f1 score'
+
+    model_name = []
+    train_score = []
+    test_score = []
+    for item1, item2, item3 in model_result_list:
+        model_name.append(item1)
+        train_score.append(item2)
+        test_score.append(item3)
+
+    bar_width = .35
+    x = np.arange(len(model_name))
+    plt.figure(figsize=(15, 10))
+    plt.bar(x, train_score, bar_width, color='c', align='center', label=('train ' + label))
+    plt.bar(x + bar_width, test_score, bar_width, color='b', align='center', label=('test ' + label))
+    plt.xlabel("models")
+    plt.ylabel(label)
+    plt.xticks(x + bar_width / 2, model_name)
+    plt.legend()
+    plt.show()
 
 
 if __name__ == '__main__':

@@ -1,12 +1,8 @@
-import matplotlib.pyplot as plt
-import numpy as np
 from sklearn import svm
 from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
 from sklearn.metrics import r2_score
-from tqdm import tqdm
-
-import data_preprocess
+import validation
 
 # 输入数据 返回模型预测值
 
@@ -84,7 +80,7 @@ def random_forest_regressor(dataset_loader_np, flag_print=False):
     model_name = 'random forest regressor'
     X_train, y_train, X_test, y_test = dataset_loader_np
 
-    random_forest_regressor_model = RandomForestRegressor().fit(X_train, y_train)
+    random_forest_regressor_model = RandomForestRegressor(max_depth=13, n_estimators=150).fit(X_train, y_train)
     train_score = r2_score(y_train, random_forest_regressor_model.predict(X_train))
     test_score = r2_score(y_test, random_forest_regressor_model.predict(X_test))
 
@@ -156,67 +152,6 @@ def svr(dataset_loader_np, flag_print=False, param_c=1.2):
     return model_evaluation_result
 
 
-'''
-model_selection_list str for model_name
-'''
-
-
-def model_evaluation(model_selection_list: list, csv_path, feature_str: list, non_normalization_feature: list = None,
-                     plot_flag=False):
-    dataset_loader_np = data_preprocess.regression_dataloader(csv_path, feature_str, non_normalization_feature)
-    all_model_evaluation_result = []
-    for item in tqdm(model_selection_list):
-        single_model_evaluation_result = model_call(item, dataset_loader_np)
-        all_model_evaluation_result.append(single_model_evaluation_result)
-
-    # print part
-    for item in all_model_evaluation_result:
-        print("The model is {0} ".format(item[0]), end="")
-        print("train_r2 is {0} ".format(item[1]), end="")
-        print("test_r2 is {0}".format(item[2]))
-
-    if plot_flag:
-        compare_model(all_model_evaluation_result)
-
-    return all_model_evaluation_result
-
-
-def model_call(model_name: str, dataset_loader_np, print_flag=False):
-    if model_name == 'ordinary regression':
-        return ordinary_regression(dataset_loader_np, print_flag)
-    elif model_name == 'LASSO regression':
-        return LASSO_regression(dataset_loader_np, print_flag)
-    elif model_name == 'random forest regressor':
-        return random_forest_regressor(dataset_loader_np, print_flag)
-    elif model_name == 'extra trees regressor':
-        return extra_trees_regressor(dataset_loader_np, print_flag)
-    elif model_name == 'gradient boosting regressor':
-        return gradient_boosting_regressor(dataset_loader_np, print_flag)
-    elif model_name == 'svr':
-        return svr(dataset_loader_np, print_flag)
-
-
-def compare_model(model_result_list: list):
-    model_name = []
-    train_r2 = []
-    test_r2 = []
-    for item1, item2, item3 in model_result_list:
-        model_name.append(item1)
-        train_r2.append(item2)
-        test_r2.append(item3)
-
-    bar_width = .35
-    x = np.arange(len(model_name))
-    plt.figure(figsize=(15, 10))
-    plt.bar(x, train_r2, bar_width, color='c', align='center', label='train r2')
-    plt.bar(x + bar_width, test_r2, bar_width, color='b', align='center', label='test r2')
-    plt.xlabel("models")
-    plt.ylabel("r2")
-    plt.xticks(x + bar_width / 2, model_name)
-    plt.legend()
-    plt.show()
-
-
 if __name__ == "__main__":
     '''
     Models include ordinary regression, LASSO regression, Random Forest regressor, Extra trees regressor, \
@@ -228,4 +163,5 @@ if __name__ == "__main__":
     csv_path = './new_feature.csv'
     feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'feature 1']
     non_normalization_feature = ['cbwd', 'feature 1']
-    model_evaluation(model_selection_list, csv_path, feature_str, non_normalization_feature, plot_flag=False)
+    validation.model_evaluation(model_selection_list, csv_path, feature_str, non_normalization_feature,
+                                task='Regression')
