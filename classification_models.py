@@ -1,18 +1,16 @@
-import pandas as pd
-import numpy as np
-import data_preprocess
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn import svm
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import f1_score
-from sklearn.linear_model import LogisticRegression
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import f1_score
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+import validation
 
 
 def KNN_classification(dataloader, print_flag=False):
     model_name = 'KNN'
     X_train, y_train, X_test, y_test = dataloader
-    neigh = KNeighborsClassifier(n_neighbors=5).fit(X_train, y_train)
+    neigh = KNeighborsClassifier(n_neighbors=10).fit(X_train, y_train)
     f1_train = f1_score(y_train, neigh.predict(X_train), average='micro')
     f1_test = f1_score(y_test, neigh.predict(X_test), average='micro')
     if print_flag:
@@ -46,7 +44,7 @@ def svm_classification(dataloader, print_flag=False):
 def decision_tree_classification(dataloader, print_flag=False):
     model_name = 'decision tree'
     X_train, y_train, X_test, y_test = dataloader
-    clf = DecisionTreeClassifier().fit(X_train, y_train)
+    clf = DecisionTreeClassifier(max_depth=10).fit(X_train, y_train)
     f1_train = f1_score(y_train, clf.predict(X_train), average='micro')
     f1_test = f1_score(y_test, clf.predict(X_test), average='micro')
     if print_flag:
@@ -95,4 +93,13 @@ def LDA_classification(dataloader, print_flag=False):
 
 
 if __name__ == '__main__':
-    pass
+    '''
+    Models include KNN, SVM, decision tree, logistic regression, LDA
+    '''
+
+    model_selection_list = ['KNN', 'SVM', 'decision tree', 'logistic regression', 'LDA']
+    csv_path = './new_feature.csv'
+    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'feature 1']
+    non_normalization_feature = ['cbwd', 'feature 1']
+    validation.model_evaluation(model_selection_list, csv_path, feature_str, non_normalization_feature,
+                                task='classification')

@@ -5,6 +5,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import numpy as np
 import regression_models
+from sklearn.model_selection import train_test_split
 
 
 def classification_cv(dataset, classification_model):
@@ -37,6 +38,9 @@ def model_evaluation(model_selection_list: list, csv_path, feature_str: list, no
     elif task in ['classification', 'Classification']:
         data_loader = data_preprocess.classification_dataloader(csv_path, feature_str,
                                                                 non_normalization_feature)
+        X, y = data_loader
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+        data_loader = (X_train.values, y_train.values.ravel(), X_test.values, y_test.values.ravel())
         label = 'f1'
     all_model_evaluation_result = []
     for item in tqdm(model_selection_list):
@@ -45,7 +49,7 @@ def model_evaluation(model_selection_list: list, csv_path, feature_str: list, no
 
     for item in all_model_evaluation_result:
         print("The model is {0} ".format(item[0]), end="")
-        print("train " + label + " score is " + str(item[1]), end="")
+        print("train " + label + " score is " + str(item[1]), end=" ")
         print("test " + label + " score is " + str(item[2]))
 
     if plot_flag:

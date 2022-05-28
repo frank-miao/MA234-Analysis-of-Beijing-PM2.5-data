@@ -171,7 +171,4 @@ def classification_dataloader(csv_path: str, selected_feature: list, non_normali
 
 
 if __name__ == '__main__':
-    csv_path = './backup/PRSA_data_raw.csv'  # FIXME 换成自己的路径
-    selected_feature = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir']
-    non_normalization_feature = ['cbwd']
-    X_y = classification_dataloader(csv_path, selected_feature, non_normalization_feature)
+    pass

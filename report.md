@@ -83,17 +83,43 @@ Implemented by `sklearn.ensemble.GradientBoostingRegressor`
 
 Implemented by `sklearn.svm`
 
-
-
 ## Feature selection and Model selection and Feature creation
 
 ### Feature selection
 
+In this part, we use several ways to select features.
+
+* **AIC and BIC**
+
+We use forward AIC and BIC to select the features step by step.
+Since scikit-learn doesn't provide the related API, we implemented this part by ourselves.
+
+Both methods show that `DEWP`, `TEMP`, `PRES`, `cbwd`, `Iws` are the selected feature.
+
+* **LASSO**
+
+We use decreasing $\alpha$ to select features.
+The result shows that `Iws`, `DEWP`, `PRES`, `TEMP`, `Ir`, `cbwd` are selected features.
+
+* **Random Forest**
+
+Random forest can calculate the feature importance.
+And we used the built-in API in this package.
+The result shows that `DEWP`, `TEMP`, `Iws`, `PRES`, `cbwd` are important.
+
+* **Mutual Information**
+
+We use the mutual information to select the features.
+The result shows that `DEWP`, `Iws`, `cbwd`, `PRES`, `TEMP` are the top 5 important.
+
+* **Conclusion**
+
+We can find out that `DEWP`, `Iws`, `cbwd`, `PRES`, `TEMP` are important features.
+And `Ir`, `Is` are not so important features.
+
 ### Feature creation
 
 ### Model selection
-
-
 
 ## Model evaluation
 
