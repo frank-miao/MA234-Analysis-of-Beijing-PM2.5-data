@@ -1,8 +1,11 @@
+import copy
+
 import numpy as np
 import pandas as pd
+from pandas import DataFrame
 from sklearn.preprocessing import StandardScaler
+
 from information_enum import PmState
-import copy
 
 
 def read_file(file_path) -> pd.DataFrame:
@@ -10,7 +13,7 @@ def read_file(file_path) -> pd.DataFrame:
 
 
 def standard_normalization(data: pd.DataFrame, selected_feature: list,
-                           non_normalization_feature: list = None) -> pd.DataFrame:
+                           non_normalization_feature: list = None) -> DataFrame:
     data_copy = copy.deepcopy(data)
     normalization_feature = selected_feature.copy()
     if non_normalization_feature:
@@ -18,7 +21,8 @@ def standard_normalization(data: pd.DataFrame, selected_feature: list,
             if item in normalization_feature:
                 normalization_feature.remove(item)
 
-    normalized_data = StandardScaler().fit_transform(data_copy[normalization_feature])
+    scaler = StandardScaler().fit(data_copy[normalization_feature])
+    normalized_data = scaler.transform(data_copy[normalization_feature])
     data_copy[normalization_feature] = normalized_data
     return data_copy
 

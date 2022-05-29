@@ -3,10 +3,10 @@ import copy
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
-from sklearn.linear_model import Lasso
+from sklearn.decomposition import PCA, KernelPCA
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.feature_selection import mutual_info_regression
-from sklearn.decomposition import PCA, KernelPCA
+from sklearn.linear_model import Lasso
 
 from data_preprocess import data_conversion
 from data_preprocess import detect_missing_data
@@ -88,12 +88,12 @@ def Mutual_Information_feature_selection(data, selected_feature: list):
     return np.array(selected_feature)[arrIndex[::-1]]
 
 
-def PCA_feature_extraction(data, selected_feature: list, kernel=False):
+def PCA_feature_extraction(data, selected_feature: list, n_components=4, kernel=False):
     X, y = load_data(data, selected_feature)
     if kernel:
         pca = KernelPCA(n_components=4).fit(X)
     else:
-        pca = PCA(n_components=4).fit(X)
+        pca = PCA(n_components=n_components).fit(X)
     X = pca.transform(X)
     return X, y
 
@@ -107,5 +107,5 @@ def load_data(data: pd.DataFrame, selected_feature: list):
 
 
 if __name__ == '__main__':
-    features = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir']
+    features = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir', 'feature 1', 'feature 2']
     print(Mutual_Information_feature_selection(pd.read_csv('new_feature.csv'), features))
