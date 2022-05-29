@@ -1,6 +1,7 @@
 from sklearn import svm
 from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
+from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import r2_score
 import validation
 
@@ -152,6 +153,26 @@ def svr(dataset_loader_np, flag_print=False, param_c=1.2):
     return model_evaluation_result
 
 
+def mlp_regressor(dataset_loader_np, flag_print=False):
+    model_name = 'mlp regressor'
+    X_train, y_train, X_test, y_test = dataset_loader_np
+
+    amm_model = MLPRegressor(hidden_layer_sizes=(16,32,64,128,256,512,256,128,64,32,16,8))
+    amm_model.fit(X_train, y_train)
+    train_score = r2_score(y_train, amm_model.predict(X_train))
+    test_score = r2_score(y_test, amm_model.predict(X_test))
+
+    if flag_print:
+        # 打印当前的模型信息
+        print("The model is {0}".format(model_name))
+        print("The R2 score of train_dataset is {0}".format(train_score))
+        print("The R2 score of test_dataset is {0}".format(test_score))
+
+    model_evaluation_result = (model_name, train_score, test_score)
+
+    return model_evaluation_result
+
+
 if __name__ == "__main__":
     '''
     Models include ordinary regression, LASSO regression, Random Forest regressor, Extra trees regressor, \
@@ -159,7 +180,7 @@ if __name__ == "__main__":
     '''
 
     model_selection_list = ['ordinary regression', 'LASSO regression', 'random forest regressor',
-                            'extra trees regressor', 'gradient boosting regressor']
+                            'extra trees regressor', 'gradient boosting regressor','ann']
     csv_path = './new_feature.csv'
     feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'feature 1']
     non_normalization_feature = ['cbwd', 'feature 1']

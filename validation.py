@@ -67,6 +67,8 @@ def model_call(model_name: str, dataloader, print_flag=False):
         return classification_models.decision_tree_classification(dataloader, print_flag)
     elif model_name in ['logistic regression', 'logistic']:
         return classification_models.logistic_regression_classification(dataloader, print_flag)
+    elif model_name in ['mlp classification']:
+        return classification_models.mlp_classification(dataloader, print_flag)
     elif model_name == 'ordinary regression':
         return regression_models.ordinary_regression(dataloader, print_flag)
     elif model_name == 'LASSO regression':
@@ -79,6 +81,8 @@ def model_call(model_name: str, dataloader, print_flag=False):
         return regression_models.gradient_boosting_regressor(dataloader, print_flag)
     elif model_name == 'svr':
         return regression_models.svr(dataloader, print_flag)
+    elif model_name == 'mlp regressor':
+        return regression_models.mlp_regressor(dataloader, print_flag)
 
 
 def compare_model_plot(model_result_list: list, task='Regression'):
