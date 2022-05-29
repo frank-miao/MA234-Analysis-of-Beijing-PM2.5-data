@@ -180,7 +180,7 @@ if __name__ == "__main__":
     '''
 
     model_selection_list = ['ordinary regression', 'LASSO regression', 'random forest regressor',
-                            'extra trees regressor', 'gradient boosting regressor','ann']
+                            'extra trees regressor', 'gradient boosting regressor','mlp regressor']
     csv_path = './new_feature.csv'
     feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'feature 1']
     non_normalization_feature = ['cbwd', 'feature 1']
