@@ -21,3 +21,9 @@ normalization
 feature selection `['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir', 'feature 1']`
 `non_normalization_feature = ['cbwd', 'feature 1']`
 ![img_1.png](img_1.png)
+
+
+
+![img_1.png](img_1.png)
+
+![img_2.png](img_2.png)

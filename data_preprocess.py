@@ -62,7 +62,7 @@ def clear_missing_value(data: pd.DataFrame, clear=False) -> pd.DataFrame:
     return data_copy
 
 
-def regression_dataloader(csv_path: str, selected_feature: list, non_normalization_feature: list = None):
+def regression_dataloader(csv_path: str, selected_feature: list, non_normalization_feature: list = None, cv_mode = False):
     dt = pd.read_csv(csv_path)
 
     if type(dt['cbwd'][1]) is str:
@@ -73,6 +73,12 @@ def regression_dataloader(csv_path: str, selected_feature: list, non_normalizati
     test_dataset_X, test_dataset_y = [], []
 
     all_dataset = standard_normalization(dt, selected_feature, non_normalization_feature)
+
+    if cv_mode:
+        all_dataset = all_dataset.dropna()
+        X = all_dataset.loc[:,selected_feature]
+        y = all_dataset.loc[:,['pm2.5']]
+        return X,y
 
     for index, item in enumerate(non_nan_index):
         if index % 7 == 6:
@@ -164,7 +170,7 @@ def classification_dataloader(csv_path: str, selected_feature: list, non_normali
     result_pd = result_pd.dropna().reset_index()
     result_pd.drop('No', axis=1, inplace=True)
 
-    X = result_pd[selected_feature]
+    X = result_pd[:,selected_feature]
     y = result_pd[['pm2.5']]
 
     return X, y

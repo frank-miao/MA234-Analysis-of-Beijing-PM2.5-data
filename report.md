@@ -1,16 +1,31 @@
 # REPORT on Introduction to Theoretical and Practical Data Science
 > 11911819 缪方然 11911915 曹书伟
 
-## Data exploration
 
+
+## Data exploration
 
 ### data statistics
 
+
+
 ### data visualization
+
+
 
 ## Data preprocessing
 
-### dataset partitioning
+### dataset partition
+
+**training dataset and test dataset**
+
+We split the `PRSA_data.csv` into training dataset and test dataset
+
+According to the requirements of the problem, one day is selected every seven days as the test set, and the other data are put into the training set.
+
+**cross validation**
+
+We also do the cross validation for dataset partition to improve the robustness of our model.
 
 ### detecting missing values
 
@@ -119,7 +134,11 @@ And `Ir`, `Is` are not so important features.
 
 ### Feature creation
 
+
+
 ### Model selection
+
+
 
 ## Model evaluation
 
@@ -132,6 +151,8 @@ And `Ir`, `Is` are not so important features.
 
 
 ### cross validation
+
+
 
 
 
