@@ -110,6 +110,7 @@ def compare_model_plot(model_result_list: list, task='Regression'):
     plt.ylabel(label)
     plt.xticks(x + bar_width / 2, model_name)
     plt.legend()
+    plt.savefig('./report_images/compare_model.svg')
     plt.show()
 
 

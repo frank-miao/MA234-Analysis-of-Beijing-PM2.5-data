@@ -185,4 +185,4 @@ if __name__ == "__main__":
     feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'feature 1']
     non_normalization_feature = ['cbwd', 'feature 1']
     validation.model_evaluation(model_selection_list, csv_path, feature_str, non_normalization_feature,
-                                task='Regression')
+                                task='Regression', plot_flag=True)
