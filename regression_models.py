@@ -3,6 +3,8 @@ from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, Gradien
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
 from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import r2_score
+from sklearn.neural_network import MLPRegressor
+
 import validation
 
 import pandas as pd
@@ -170,7 +172,7 @@ def mlp_regressor(dataset_loader_np, flag_print=False):
     model_name = 'mlp regressor'
     X_train, y_train, X_test, y_test = dataset_loader_np
 
-    amm_model = MLPRegressor(hidden_layer_sizes=(16, 32, 64, 128, 256, 512, 256, 128, 64, 32, 16, 8))
+    amm_model = MLPRegressor(hidden_layer_sizes=(16, 32, 64, 128, 256, 128, 64, 32, 16, 8))
     amm_model.fit(X_train, y_train)
     train_score = r2_score(y_train, amm_model.predict(X_train))
     test_score = r2_score(y_test, amm_model.predict(X_test))
@@ -255,15 +257,13 @@ def lstm(dataset_loader_np, flag_print=False):
 if __name__ == "__main__":
     '''
     Models include ordinary regression, LASSO regression, Random Forest regressor, Extra trees regressor, \
-    Gradient Boosting regressor, SVR
+    Gradient Boosting regressor, SVR, MLP regression
     '''
 
-    # model_selection_list = ['ordinary regression', 'LASSO regression', 'random forest regressor',
-    #                         'extra trees regressor', 'gradient boosting regressor', 'mlp regressor']
-
-    model_selection_list = ['lstm']
+    model_selection_list = ['ordinary regression', 'LASSO regression', 'random forest regressor',
+                            'extra trees regressor', 'gradient boosting regressor','mlp regressor']
     csv_path = './new_feature.csv'
-    feature_str = ['pm2.5', 'DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir']
+    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'feature 1']
     non_normalization_feature = ['cbwd', 'feature 1']
     validation.model_evaluation(model_selection_list, csv_path, feature_str, non_normalization_feature,
                                 task='Regression')

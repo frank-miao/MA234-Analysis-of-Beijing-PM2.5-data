@@ -1,11 +1,12 @@
-from sklearn.model_selection import KFold
-import data_preprocess
-import classification_models
-from tqdm import tqdm
 import matplotlib.pyplot as plt
 import numpy as np
-import regression_models
+from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
+from tqdm import tqdm
+
+import classification_models
+import data_preprocess
+import regression_models
 
 
 def cross_validation(dataset, model, model_type:str):
@@ -65,7 +66,7 @@ def model_evaluation(model_selection_list: list, csv_path, feature_str: list, no
 
 
 def model_call(model_name: str, dataloader, print_flag=False):
-    if model_name == 'KNN':
+    if model_name in ['KNN', 'knn']:
         return classification_models.KNN_classification(dataloader, print_flag)
     elif model_name in ['svm', 'SVM']:
         return classification_models.svm_classification(dataloader, print_flag)
