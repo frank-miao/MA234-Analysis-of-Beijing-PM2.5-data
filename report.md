@@ -231,11 +231,29 @@ In this part, we use several ways to select features.
   We draw the value of pm2.5 at 12a.m. every day for each year
   and find out that it is extremely high in winter and relatively low in summer.
   ![](report_images/data_analysis.svg)
+
+  Here we also draw the cumulative value of each month.
+
+  ![](report_images/feature1_pm25_season.png)
+
+  It also shows that the pm2.5 value is high in winter and relatively low in summer.
+
   Hence, we add our first feature.
   Since it's high in winter and low in summer,
   we assign 4 for winter and 1 for summer.
   With more specific analysis, we find the pollution in fall seems worse than that of spring.
   Thus, we assign 3 for fall and 2 for spring.
+
+
+* **Feature 2**
+
+  We also want to add another feature about the day, like morning or afternoon.
+  However, the performance is not so good.
+  The plot is following:
+  ![](report_images/feature1_pm25_day.png)
+
+  We can see the value is distributed uniformly between the four time intervals.
+  Hence, it may not be a valid feature.
 
 ### Model selection
 
