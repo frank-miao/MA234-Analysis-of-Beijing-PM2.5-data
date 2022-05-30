@@ -1,7 +1,6 @@
 from sklearn import svm
 from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
-from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import r2_score
 from sklearn.neural_network import MLPRegressor
 

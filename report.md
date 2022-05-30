@@ -2,6 +2,62 @@
 
 > 11911819 缪方然 11911915 曹书伟
 
+[toc]
+
+Github link 
+
+Opensource
+
+所有的结果都可以复现
+
+## Briefly Introduction
+
+#### Introduction
+
+项目的整体介绍，类似于论文的abstract
+
+#### Github Link
+
+https://github.com/UtoKing/MA234
+
+## 0.Check List
+
+我们的报告安装文档中对于报告的要求的顺序所写。同时，我们也完成了文档中五个任务的所有问题。下面是报告的检查清单，对应着每个问题的每个小块具体在对应在报告的什么地方
+
+### Task1
+
+- [x] Delete all items with missing PM2.5 (“NA”)
+  - ==这里补充这个实现在报告的什么地方可以找到==
+- [x] Split the remaining data to training and test sets by following the rule in task1
+- [x] Construct own model
+- [x] Use the dataset that task1 generated to do the prediction
+- [x] Validate the models on the test set 
+
+### Task2
+
+- [x] Examine the tendency of PM2.5 variation
+- [x] Produce more features using the time information
+- [x] Use the new features you just produce to predict PM2.5 again
+- [x] Validate your models
+
+### Task3
+
+- [x] Keep all items without deleting any missing data
+- [x] Impute the missing values by some approaches
+- [x] Combine all the information (full data) to do the prediction
+
+### Task4
+
+- [x] Select the most important several features for the PM2.5 forecast
+- [x] Explain what they mean, and how important they are for the new feature
+
+### Task5(optional)
+
+
+- [x] Partition the PM2.5 time series into three states
+- [x] Smooth the time series over 3-hour moving windows 
+- [x] Treat this as a classification problem and make the prediction
+
 ## 1.Data exploration
 
 ### data statistics
@@ -50,8 +106,7 @@ Here we draw some diagrams to show the insight of the data.
 
 We split the `PRSA_data.csv` into training dataset and test dataset
 
-According to the requirements of the problem, one day is selected every seven days as the test set, and the other data
-are put into the training set.
+According to the requirements of the problem, one day is selected every seven days as the test set, and the other data are put into the training set.
 
 **cross validation**
 
@@ -151,6 +206,10 @@ The regression models are stored in `regression_models.py`.
 * **MLP regressor**
   Implemented by `sklearn.MLPRegressor`.
   The related code can be found in `regression_models.py->mlp_regressor`.
+  
+* **LSTM regressor** 
+  Implemented by `keras.layers`.
+  The related code can be found in `regression_models.py->lstm`.
 
 ### Classification
 
@@ -257,32 +316,59 @@ In this part, we use several ways to select features.
 
 ### Model selection
 
-In this project, we use machine learning and deep learning model.
+In this project, we use machine learning and deep learning model to do the prediction.
 
-==图片之后会进行替换==
+The result is shown in the Model evaluation part.
 
-![image-20220530103811345](C:\Users\csw200108\AppData\Roaming\Typora\typora-user-images\image-20220530103811345.png)
+![Regression](report_images/Regression.svg)
 
-
-
-
-
-#### ![image-20220530104537648](C:\Users\csw200108\AppData\Roaming\Typora\typora-user-images\image-20220530104537648.png)
-
-
+![Classification](report_images/Classification.svg)
 
 
 
 ## 5.Model evaluation
 
-### R2 score
+### dropna dataset
 
-### F1 score
+| R2 score                     | training dataset | test dataset | cross validation result |
+| ---------------------------- | ---------------- | ------------ | ----------------------- |
+| **Machine Learning Method**  |                  |              |                         |
+| Normal Linear Regression     |                  |              |                         |
+| Ridge Regression             |                  |              |                         |
+| LASSO Regression             |                  |              |                         |
+| Random Forset Regression     |                  |              |                         |
+| Extra Trees Regression       |                  |              |                         |
+| Gradient Boosting Regression |                  |              |                         |
+| Support Vector Machine       |                  |              |                         |
+| **Deep Learning Method**     |                  |              |                         |
+| Artifical Neural Network     |                  |              |                         |
+| Long Short Term Memory Model |                  |              |                         |
 
+| F1 score                     | training dataset | test dataset | cross validation result |
+| ---------------------------- | ---------------- | ------------ | ----------------------- |
+| **Machine Learning Method**  |                  |              |                         |
+| Logistic Regression          |                  |              |                         |
+| KNN                          |                  |              |                         |
+| Support Vector Machine       |                  |              |                         |
+| Decision Treee               |                  |              |                         |
+| Linear Discriminant Analysis |                  |              |                         |
+| Deep Learning Method         |                  |              |                         |
+| Multilayer Perceptron        |                  |              |                         |
 
-### F2 score
-
-
+### Other dataset
+| R2 score for CV              | Mean Value | Median Value | Mode Value | KNN  | Interpolate |
+| ---------------------------- | ---------- | ------------ | ---------- | ---- | ----------- |
+| **Machine Learning Method**  |            |              |            |      |             |
+| Normal Linear Regression     |            |              |            |      |             |
+| Ridge Regression             |            |              |            |      |             |
+| LASSO Regression             |            |              |            |      |             |
+| Random Forset Regression     |            |              |            |      |             |
+| Extra Trees Regression       |            |              |            |      |             |
+| Gradient Boosting Regression |            |              |            |      |             |
+| Support Vector Machine       |            |              |            |      |             |
+| **Deep Learning Method**     |            |              |            |      |             |
+| Artifical Neural Network     |            |              |            |      |             |
+| Long Short Term Memory Model |            |              |            |      |             |
 
 ### cross validation
 
@@ -291,4 +377,15 @@ To verify the robustness of our model, we use a cross-validation method. The spe
 KFold.
 
 ## 6.Conclusion
+
+Through this project, we learned the following knowledge
+
+- Implement machine learning models using library functions
+- Implement deep learning models using library functions
+- Feature selection techniques
+- Data preprocessing techniques
+- Model tuning techniques
+- Model evaluation methods 
+
+In this project, we applied the knowledge learned in theoretical courses to real problems, combining theory with reality. At the same time, this project also enhanced our code ability and enabled us to have a deeper understanding of the machine learning methods, which will be of great help to our future.
 

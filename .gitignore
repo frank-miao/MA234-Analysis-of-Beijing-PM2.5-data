@@ -13,3 +13,11 @@ backup/
 SVR.ipynb
 feature_selection.csv
 report.pdf
+/ensemble_learning/
+__pycache__
+/images/
+problem_1.ipynb
+problem_2.ipynb
+problem_3.ipynb
+problem_4.ipynb
+

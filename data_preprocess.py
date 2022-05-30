@@ -34,28 +34,12 @@ def detect_missing_data(data: pd.DataFrame):
     return nan_index, non_nan_index
 
 
+
 def data_conversion(data: pd.DataFrame) -> pd.DataFrame:
     data_copy = copy.deepcopy(data)
-    cbwd_one_hot = dict(
-        zip(set(data_copy['cbwd']), range(4)))  # FIXME 这里的range应该是(1,5) 特征的值是0的话权重值就没有用了 0*any_value = 0
-    cbwd_one_hot_inverse = dict(zip(range(4), set(data_copy['cbwd'])))
-
-    X_cbwd = copy.deepcopy(data_copy['cbwd'].values)
-    X_cbwd_new = np.asarray(X_cbwd)
-    for i, item in enumerate(X_cbwd):
-        X_cbwd_new[i] = cbwd_one_hot[item]
-
-    data_copy['cbwd'] = X_cbwd_new
-    data_copy['cbwd'] = data_copy['cbwd'].astype(np.int64)
+    cbwd_dict = dict(zip(set(data_copy['cbwd']), range(1,5)))
+    data_copy['cbwd'] = data_copy['cbwd'].apply(lambda x: cbwd_dict[x])
     return data_copy
-
-
-# TODO data_conversion 函数 有一个简写的方法
-# def data_conversion(data: pd.DataFrame) -> pd.DataFrame:
-#     data_copy = copy.deepcopy(data)
-#     cbwd_dict = dict(zip(set(data_copy['cbwd']), range(1,5)))
-#     data_copy['cbwd'] = data_copy['cbwd'].apply(lambda x: cbwd_dict[x])
-#     return data_copy
 
 
 def clear_missing_value(data: pd.DataFrame, clear=False) -> pd.DataFrame:

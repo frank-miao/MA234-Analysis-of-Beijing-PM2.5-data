@@ -11,7 +11,7 @@ import regression_models
 
 def cross_validation(dataset, model, model_type: str):
     X, y = dataset
-    kf = KFold(n_splits=5, shuffle=False)
+    kf = KFold(n_splits=3, shuffle=False)
     score_train = []
     score_test = []
     for train_index, test_index in tqdm(kf.split(X)):
