@@ -1,10 +1,10 @@
-# REPORT on Introduction to Theoretical and Practical Data Science
+# *REPORT* on Introduction to Theoretical and Practical Data Science
 
 > 11911819 缪方然 11911915 曹书伟
 
 [toc]
 
-Github link 
+Github link
 
 Opensource
 
@@ -14,7 +14,17 @@ Opensource
 
 #### Introduction
 
-项目的整体介绍，类似于论文的abstract
+The purpose of our project is to predict the value of pm2.5 in Beijing for a specific time period based on existing
+features.
+The project is divided into two main aspects, regression problem and classification problem.
+The regression problem predicts discrete values of pm2.5, and the classification problem divides pm2.5 into several
+states based on intervals for state prediction.
+Our project is divided into data analysis, data pre-processing, model construction, feature construction, feature
+selection, model selection, model evaluation and summary.
+In the model construction, we used seven machine learning models and two deep learning models for the regression
+problem, and five machine learning models and one deep learning model for the classification problem.
+Finally, in the regression model, our cross-validation prediction accuracy can reach up to (using LSTM model) in the
+classification model, our cross-validation accuracy can finally reach (using xxx model)
 
 #### Github Link
 
@@ -22,41 +32,54 @@ https://github.com/UtoKing/MA234
 
 ## 0.Check List
 
-我们的报告安装文档中对于报告的要求的顺序所写。同时，我们也完成了文档中五个任务的所有问题。下面是报告的检查清单，对应着每个问题的每个小块具体在对应在报告的什么地方
+Our report was written in the order of the requirements for the report in the document.
+At the same time, we completed all questions for the five tasks in the documentation.
+Here is the checklist for the report, corresponding to where each block of each issue corresponds to in the report.
 
 ### Task1
 
 - [x] Delete all items with missing PM2.5 (“NA”)
-  - ==这里补充这个实现在报告的什么地方可以找到==
+    - In *2.Data preprocessing -> detect missing value -> delete*
 - [x] Split the remaining data to training and test sets by following the rule in task1
+    - In *2.Data preprocessing -> data partition*
 - [x] Construct own model
+    - In *3.Model construction -> Regression*
 - [x] Use the dataset that task1 generated to do the prediction
-- [x] Validate the models on the test set 
+    - In *3.Model construction -> Regression*
+- [x] Validate the models on the test set
+    - In *5.Model evaluation -> dropna dataset*
 
 ### Task2
 
-- [x] Examine the tendency of PM2.5 variation
-- [x] Produce more features using the time information
+- [x] Examine the tendency of PM2.5 variation and produce more features using the time information
+    - In *4.Feature selection and Model selection and Feature creation -> Feature creation*
 - [x] Use the new features you just produce to predict PM2.5 again
+    - In *5.Model evaluation -> dropna dataset*
 - [x] Validate your models
+    - In *5.Model evaluation -> dropna dataset*
 
 ### Task3
 
 - [x] Keep all items without deleting any missing data
+    - In *2.Data preprocessing -> data imputation*
 - [x] Impute the missing values by some approaches
+    - In *2.Data preprocessing -> data imputation*
 - [x] Combine all the information (full data) to do the prediction
+    - In *5.Model evaluation -> Other dataset*
 
 ### Task4
 
 - [x] Select the most important several features for the PM2.5 forecast
+    - In *4.Feature selection and Model selection and Feature creation -> feature selection*
 - [x] Explain what they mean, and how important they are for the new feature
+    - In *4.Feature selection and Model selection and Feature creation -> feature selection*
 
 ### Task5(optional)
 
-
-- [x] Partition the PM2.5 time series into three states
-- [x] Smooth the time series over 3-hour moving windows 
+- [x] Partition the PM2.5 time series into three states and smooth over 3-hour moving windows
+    - In *2.Data preprocessing -> dataset partition*
 - [x] Treat this as a classification problem and make the prediction
+    - In *5.Model evaluation*
 
 ## 1.Data exploration
 
@@ -106,19 +129,25 @@ Here we draw some diagrams to show the insight of the data.
 
 We split the `PRSA_data.csv` into training dataset and test dataset
 
-According to the requirements of the problem, one day is selected every seven days as the test set, and the other data are put into the training set.
+According to the requirements of the problem, one day is selected every seven days as the test set, and the other data
+are put into the training set.
 
 **cross validation**
 
 We also do the cross validation for dataset partition to improve the robustness of our model.
 
-### detecting missing values
+### detect missing values
 
 * **Detect**
 
   We use `np.where` and `np.isnan` to find and locate the NAN data.
   Then generate the `nan_index` and `non_nan_index` to help us.
   The related code is in `data_preprocess.py->detect_missiing_data`.
+
+
+* **Delete**
+
+  We use the generated `nan_index` to delete those rows.
 
 
 * **Fill**
@@ -206,8 +235,8 @@ The regression models are stored in `regression_models.py`.
 * **MLP regressor**
   Implemented by `sklearn.MLPRegressor`.
   The related code can be found in `regression_models.py->mlp_regressor`.
-  
-* **LSTM regressor** 
+
+* **LSTM regressor**
   Implemented by `keras.layers`.
   The related code can be found in `regression_models.py->lstm`.
 
@@ -280,7 +309,7 @@ In this part, we use several ways to select features.
 * **Conclusion**
 
   We can find out that `DEWP`, `Iws`, `cbwd`, `PRES`, `TEMP` are important features.
-  And `Ir`, `Is` are not so important features.
+  And `Ir`, `Is` are not so significant features.
 
 ### Feature creation
 
@@ -303,6 +332,10 @@ In this part, we use several ways to select features.
   With more specific analysis, we find the pollution in fall seems worse than that of spring.
   Thus, we assign 3 for fall and 2 for spring.
 
+  This feature stands for some meaning:
+  Because Beijing uses heating in winter, it will use a lot of coal,
+  resulting in a large amount of PM2.5
+
 
 * **Feature 2**
 
@@ -324,19 +357,17 @@ The result is shown in the Model evaluation part.
 
 ![Classification](report_images/Classification.svg)
 
-
-
 ## 5.Model evaluation
 
 ### dropna dataset
 
 | R2 score                     | training dataset | test dataset | cross validation result |
-| ---------------------------- | ---------------- | ------------ | ----------------------- |
+|------------------------------|------------------|--------------|-------------------------|
 | **Machine Learning Method**  |                  |              |                         |
 | Normal Linear Regression     |                  |              |                         |
 | Ridge Regression             |                  |              |                         |
 | LASSO Regression             |                  |              |                         |
-| Random Forset Regression     |                  |              |                         |
+| Random Forest Regression    |                  |              |                         |
 | Extra Trees Regression       |                  |              |                         |
 | Gradient Boosting Regression |                  |              |                         |
 | Support Vector Machine       |                  |              |                         |
@@ -345,7 +376,7 @@ The result is shown in the Model evaluation part.
 | Long Short Term Memory Model |                  |              |                         |
 
 | F1 score                     | training dataset | test dataset | cross validation result |
-| ---------------------------- | ---------------- | ------------ | ----------------------- |
+|------------------------------|------------------|--------------|-------------------------|
 | **Machine Learning Method**  |                  |              |                         |
 | Logistic Regression          |                  |              |                         |
 | KNN                          |                  |              |                         |
@@ -356,6 +387,7 @@ The result is shown in the Model evaluation part.
 | Multilayer Perceptron        |                  |              |                         |
 
 ### Other dataset
+
 | R2 score for CV              | Mean Value | Median Value | Mode Value | KNN  | Interpolate |
 | ---------------------------- | ---------- | ------------ | ---------- | ---- | ----------- |
 | **Machine Learning Method**  |            |              |            |      |             |
@@ -385,7 +417,9 @@ Through this project, we learned the following knowledge
 - Feature selection techniques
 - Data preprocessing techniques
 - Model tuning techniques
-- Model evaluation methods 
+- Model evaluation methods
 
-In this project, we applied the knowledge learned in theoretical courses to real problems, combining theory with reality. At the same time, this project also enhanced our code ability and enabled us to have a deeper understanding of the machine learning methods, which will be of great help to our future.
+In this project, we applied the knowledge learned in theoretical courses to real problems, combining theory with
+reality. At the same time, this project also enhanced our code ability and enabled us to have a deeper understanding of
+the machine learning methods, which will be of great help to our future.
 
