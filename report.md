@@ -6,7 +6,41 @@
 
 ### data statistics
 
+|         | pm2.5  | DEWP  | TEMP   | PRES     | Iws    | Ir    | Is    |
+|---------|--------|-------|--------|----------|--------|-------|-------|
+| mean    | 98.613 | 1.817 | 12.449 | 1016.448 | 23.889 | 0.053 | 0.195 |
+| median  | 72     | 2     | 14     | 1016     | 5.37   | 0     | 0     |
+| mode    | 16     | 18    | 24     | 1014     | 0.89   | 0     | 0     |
+| maximum | 994    | 28    | 42     | 1046     | 585.6  | 27    | 36    |
+| minimum | 0      | -40   | -19    | 991      | 0.45   | 0     | 0     |
+
 ### data visualization
+
+Here we draw some diagrams to show the insight of the data.
+
+* **Hist diagram of the to-predict value--pm2.5**
+
+  <img height="300" src=".\report_images\pm25_hist.svg" width="500"/>
+
+  The diagram shows that the value of pm2.5 are mainly in the range of 0 to 165.
+  Although pm2.5 above 500 is merely extinct in the diagram, there are still few of them. (About 20 and even less)
+
+
+* **Bar diagram of cbwd**
+
+  <img height="300" src=".\report_images\cbwd_bar.svg" width="500"/>
+
+  The diagram shows that the southeastern and northwestern wind often blow in Beijing,
+  and it hardly appears southwestern wind.
+
+
+* **Heatmap**
+
+  ![](report_images/heatmap.svg)
+
+  The diagram shows the correlation between different features.
+  It shows that `PRES` has strong relationship with both `DEWP` and `TEMP`.
+  Meanwhile, `DEWP` and `TEMP` also has strong relationship.
 
 ## 2.Data preprocessing
 
@@ -16,7 +50,8 @@
 
 We split the `PRSA_data.csv` into training dataset and test dataset
 
-According to the requirements of the problem, one day is selected every seven days as the test set, and the other data are put into the training set.
+According to the requirements of the problem, one day is selected every seven days as the test set, and the other data
+are put into the training set.
 
 **cross validation**
 
@@ -29,6 +64,7 @@ We also do the cross validation for dataset partition to improve the robustness 
   We use `np.where` and `np.isnan` to find and locate the NAN data.
   Then generate the `nan_index` and `non_nan_index` to help us.
   The related code is in `data_preprocess.py->detect_missiing_data`.
+
 
 * **Fill**
 
@@ -80,30 +116,37 @@ The regression models are stored in `regression_models.py`.
   Implemented by `sklearn.linear_model.LinearRegression`.
   The related code can be found in `regression_models.py->ordinary_regression`.
 
+
 * **ridge regression**
   Implemented by `sklearn.linear_model.Ridge`.
   The related code can be found in `regression_models.py->ridge_regression`.
+
 
 * **LASSO regression model**
   Implemented by `sklearn.linear_model.Lasso`.
   The related code can be found in `regression_models.py->LASSO_regression`.
 
+
 * **random forest regressor model**
   Implemented by `sklearn.ensemble.RandomForestRegressor`.
   The related code can be found in `regression_models.py->random_forest_regressor`.
 
+
 * **extra trees regressor**
   Implemented by `sklearn.ensemble.ExtraTreesRegressor`.
   The related code can be found in `regression_models.py->extra_trees_regressor`.
+
 
 * **gradient boosting regressor**
 
   Implemented by `sklearn.ensemble.GradientBoostingRegressor`.
   The related code can be found in `regression_models.py->gradient_boosting_regressor`.
 
+
 * **support vector regressor**
   Implemented by `sklearn.svm.svr`.
   The related code can be found in `regression_models.py->svr`.
+
 
 * **MLP regressor**
   Implemented by `sklearn.MLPRegressor`.
@@ -116,18 +159,28 @@ The classification models are stored in `classification_models.py`.
 * **KNN**
   Implemented by `sklearn.neighbors.KNeighborsClassifier`.
   The related code can be found in `classification_models.py->KNN_classification`.
+
+
 * **SVM**
   Implemented by `sklearn.svm.svc`.
   The related code can be found in `classification_models.py->SVM_classification`.
+
+
 * **Decision Tree**
   Implemented by `sklearn.tree.DecisionTreeClassifier`.
   The related code can be found in `classification_models.py->decision_tree_classification`.
+
+
 * **Logistic Regression**
   Implemented by `sklearn.linear_model.LogisticRegression`.
   The related code can be found in `classification_models.py->decision_tree_classification`.
+
+
 * **LDA**
   Implemented by `sklearn.discriminant_analysis.LinearDiscriminantAnalysis`.
   The related code can be found in `classification_models.py->decision_tree_classification`.
+
+
 * **MLP classification**
   Implemented by `sklearn.neural_network.MLPClassifier`.
   The related code can be found in `classification_models.py->decision_tree_classification`.
@@ -145,10 +198,12 @@ In this part, we use several ways to select features.
 
   Both methods show that `DEWP`, `TEMP`, `PRES`, `cbwd`, `Iws` are the selected feature.
 
+
 * **LASSO**
 
   We use decreasing $\alpha$ to select features.
   The result shows that `Iws`, `DEWP`, `PRES`, `TEMP`, `Ir`, `cbwd` are selected features.
+
 
 * **Random Forest**
 
@@ -156,10 +211,12 @@ In this part, we use several ways to select features.
   And we used the built-in API in this package.
   The result shows that `DEWP`, `TEMP`, `Iws`, `PRES`, `cbwd` are important.
 
+
 * **Mutual Information**
 
   We use the mutual information to select the features.
   The result shows that `DEWP`, `Iws`, `cbwd`, `PRES`, `TEMP` are the top 5 important ones.
+
 
 * **Conclusion**
 
@@ -186,7 +243,7 @@ In this part, we use several ways to select features.
 
 ### R2 score
 
-### F2 score
+### F1 score
 
 ### cross validation
 

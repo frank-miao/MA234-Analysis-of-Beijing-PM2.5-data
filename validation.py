@@ -9,7 +9,7 @@ import data_preprocess
 import regression_models
 
 
-def cross_validation(dataset, model, model_type:str):
+def cross_validation(dataset, model, model_type: str):
     X, y = dataset
     kf = KFold(n_splits=5, shuffle=False)
     score_train = []
@@ -131,9 +131,9 @@ if __name__ == '__main__':
     #                                                        non_normalization_feature=non_normalization_feature)
     # cross_validation(dataloader, classification_models.svm_classification,model_type='classification')
 
-
     feature_str = ['pm2.5', 'DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir']
     non_normalization_feature = ['cbwd', 'feature 1']
     dataloader = data_preprocess.regression_dataloader('new_feature.csv', selected_feature=feature_str,
-                                                           non_normalization_feature=non_normalization_feature,cv_mode=True)
-    cross_validation(dataloader, regression_models.lstm,model_type='regression')
+                                                       non_normalization_feature=non_normalization_feature,
+                                                       cv_mode=True)
+    cross_validation(dataloader, regression_models.lstm, model_type='regression')
