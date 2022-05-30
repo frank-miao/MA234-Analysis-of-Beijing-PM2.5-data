@@ -6,7 +6,11 @@
 
 ### data statistics
 
+
+
 ### data visualization
+
+
 
 ## 2.Data preprocessing
 
@@ -182,13 +186,37 @@ In this part, we use several ways to select features.
 
 ### Model selection
 
+In this project, we use machine learning and deep learning model.
+
+==图片之后会进行替换==
+
+![image-20220530103811345](C:\Users\csw200108\AppData\Roaming\Typora\typora-user-images\image-20220530103811345.png)
+
+
+
+
+
+#### ![image-20220530104537648](C:\Users\csw200108\AppData\Roaming\Typora\typora-user-images\image-20220530104537648.png)
+
+
+
+
+
 ## 5.Model evaluation
 
 ### R2 score
 
+
+
 ### F2 score
 
+
+
 ### cross validation
+
+To verify the robustness of our model, we use a cross-validation method. The specific method used is KFold
+
+KFold.
 
 ## 6.Conclusion
 
