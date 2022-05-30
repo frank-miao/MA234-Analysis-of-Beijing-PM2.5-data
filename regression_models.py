@@ -15,9 +15,9 @@ from keras.layers import Dense
 from keras.layers import Dropout
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
+
 plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
-
 
 # 输入数据 返回模型预测值
 
@@ -171,7 +171,7 @@ def mlp_regressor(dataset_loader_np, flag_print=False):
     model_name = 'mlp regressor'
     X_train, y_train, X_test, y_test = dataset_loader_np
 
-    amm_model = MLPRegressor(hidden_layer_sizes=(16, 32, 64, 128, 256, 128, 64, 32, 16, 8))
+    amm_model = MLPRegressor(hidden_layer_sizes=(16, 32, 64, 128, 64, 32, 16, 8))
     amm_model.fit(X_train, y_train)
     train_score = r2_score(y_train, amm_model.predict(X_train))
     test_score = r2_score(y_test, amm_model.predict(X_test))
@@ -188,27 +188,26 @@ def mlp_regressor(dataset_loader_np, flag_print=False):
 
 
 def lstm(dataset_loader_np, flag_print=False):
-
     model_name = 'lstm'
     X_train, y_train, X_test, y_test = dataset_loader_np
 
     X_train_lstm = np.zeros((X_train.shape[0] // 24 - 1,
-             24,
-              X_train.shape[-1]))
+                             24,
+                             X_train.shape[-1]))
     y_train_lstm = np.zeros((y_train.shape[0] // 24 - 1,
-              24))
+                             24))
 
     train_rows = range(0, X_train.shape[0] // 24 - 1)
 
-    for i,row in enumerate(train_rows):
+    for i, row in enumerate(train_rows):
         X_train_lstm[i, :, :] = X_train[row: row + 24]
         y_train_lstm[i, :] = y_train[row + 24: row + 24 + 24]
 
     X_test_lstm = np.zeros((X_test.shape[0] // 24 - 1,
-                             24,
-                             X_test.shape[-1]))
+                            24,
+                            X_test.shape[-1]))
     y_test_lstm = np.zeros((y_test.shape[0] // 24 - 1,
-                             24))
+                            24))
 
     test_rows = range(0, X_test.shape[0] // 24 - 1)
 
@@ -216,11 +215,10 @@ def lstm(dataset_loader_np, flag_print=False):
         X_test_lstm[i, :, :] = X_test[row: row + 24]
         y_test_lstm[i, :] = y_test[row + 24: row + 24 + 24]
 
-
     lstm_model = Sequential()
     lstm_model.add(LSTM(32,
-                   input_shape=(X_train_lstm.shape[1], X_train_lstm.shape[-1]),
-                   return_sequences=True))
+                        input_shape=(X_train_lstm.shape[1], X_train_lstm.shape[-1]),
+                        return_sequences=True))
     lstm_model.add(Dropout(0.2))
     lstm_model.add(LSTM(32, return_sequences=True))
     lstm_model.add(Dropout(0.2))
@@ -230,13 +228,13 @@ def lstm(dataset_loader_np, flag_print=False):
     lstm_model.add(Dense(24))
 
     lstm_model.compile(loss='mse',
-                  optimizer='rmsprop')
+                       optimizer='rmsprop')
     lstm_model.summary()
 
     lstm_model.fit(X_train_lstm, y_train_lstm,
-                        epochs=60,
-                        batch_size=128,
-                        validation_data=(X_test_lstm, y_test_lstm))
+                   epochs=60,
+                   batch_size=128,
+                   validation_data=(X_test_lstm, y_test_lstm))
 
     train_score = r2_score(y_train_lstm, lstm_model.predict(X_train_lstm))
     test_score = r2_score(y_test_lstm, lstm_model.predict(X_test_lstm))
@@ -252,7 +250,6 @@ def lstm(dataset_loader_np, flag_print=False):
     return model_evaluation_result
 
 
-
 if __name__ == "__main__":
     '''
     Models include ordinary regression, LASSO regression, Random Forest regressor, Extra trees regressor, \
@@ -260,9 +257,12 @@ if __name__ == "__main__":
     '''
 
     model_selection_list = ['ordinary regression', 'LASSO regression', 'random forest regressor',
-                            'extra trees regressor', 'gradient boosting regressor','mlp regressor']
-    csv_path = './new_feature.csv'
-    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'feature 1']
-    non_normalization_feature = ['cbwd', 'feature 1']
-    validation.model_evaluation(model_selection_list, csv_path, feature_str, non_normalization_feature,
-                                task='Regression', plot_flag=True)
+                            'extra trees regressor', 'gradient boosting regressor', 'mlp regressor']
+    csv_path = 'impute_files/interpolate.csv'
+    file_list = ['interpolate.csv', 'knn.csv', 'mean.csv', 'median.csv', 'mode.csv', 'zero.csv']
+    feature_str = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir']
+    non_normalization_feature = ['cbwd']
+    for item in file_list:
+        validation.model_evaluation(model_selection_list, 'impute_files/' + item, feature_str,
+                                    non_normalization_feature,
+                                    task='Regression', plot_flag=True)

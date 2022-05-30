@@ -1,14 +1,8 @@
-# *REPORT* on Introduction to Theoretical and Practical Data Science
+# REPORT on Introduction to Theoretical and Practical Data Science
 
 > 11911819 缪方然 11911915 曹书伟
 
 [toc]
-
-Github link
-
-Opensource
-
-所有的结果都可以复现
 
 ## Briefly Introduction
 
@@ -35,6 +29,7 @@ https://github.com/UtoKing/MA234
 Our report was written in the order of the requirements for the report in the document.
 At the same time, we completed all questions for the five tasks in the documentation.
 Here is the checklist for the report, corresponding to where each block of each issue corresponds to in the report.
+
 
 ### Task1
 
@@ -125,6 +120,8 @@ Here we draw some diagrams to show the insight of the data.
 
 ### dataset partition
 
+#### regression dataset
+
 **training dataset and test dataset**
 
 We split the `PRSA_data.csv` into training dataset and test dataset
@@ -132,22 +129,23 @@ We split the `PRSA_data.csv` into training dataset and test dataset
 According to the requirements of the problem, one day is selected every seven days as the test set, and the other data
 are put into the training set.
 
+#### classification dataset
+
+We also generate the classification dataset, we partition the PM2.5 time series into three states and then smooth the
+time series over 3-hour moving windows. Then we take eighty percent of the data from the dataset for the training set
+and twenty percent of the data for the test set.
+
 **cross validation**
 
 We also do the cross validation for dataset partition to improve the robustness of our model.
 
-### detect missing values
+### detecting missing values
 
 * **Detect**
 
   We use `np.where` and `np.isnan` to find and locate the NAN data.
   Then generate the `nan_index` and `non_nan_index` to help us.
   The related code is in `data_preprocess.py->detect_missiing_data`.
-
-
-* **Delete**
-
-  We use the generated `nan_index` to delete those rows.
 
 
 * **Fill**
@@ -309,7 +307,7 @@ In this part, we use several ways to select features.
 * **Conclusion**
 
   We can find out that `DEWP`, `Iws`, `cbwd`, `PRES`, `TEMP` are important features.
-  And `Ir`, `Is` are not so significant features.
+  And `Ir`, `Is` are not so important features.
 
 ### Feature creation
 
@@ -331,10 +329,6 @@ In this part, we use several ways to select features.
   we assign 4 for winter and 1 for summer.
   With more specific analysis, we find the pollution in fall seems worse than that of spring.
   Thus, we assign 3 for fall and 2 for spring.
-
-  This feature stands for some meaning:
-  Because Beijing uses heating in winter, it will use a lot of coal,
-  resulting in a large amount of PM2.5
 
 
 * **Feature 2**
@@ -361,52 +355,59 @@ The result is shown in the Model evaluation part.
 
 ### dropna dataset
 
-| R2 score                     | training dataset | test dataset | cross validation result |
-|------------------------------|------------------|--------------|-------------------------|
-| **Machine Learning Method**  |                  |              |                         |
-| Normal Linear Regression     |                  |              |                         |
-| Ridge Regression             |                  |              |                         |
-| LASSO Regression             |                  |              |                         |
-| Random Forest Regression    |                  |              |                         |
-| Extra Trees Regression       |                  |              |                         |
-| Gradient Boosting Regression |                  |              |                         |
-| Support Vector Machine       |                  |              |                         |
-| **Deep Learning Method**     |                  |              |                         |
-| Artifical Neural Network     |                  |              |                         |
-| Long Short Term Memory Model |                  |              |                         |
+We tested the results on the dropna dataset without feature selection and with feature selection. The results show that
+the accuracy of the model is improved after feature analysis and feature selection.
 
-| F1 score                     | training dataset | test dataset | cross validation result |
-|------------------------------|------------------|--------------|-------------------------|
-| **Machine Learning Method**  |                  |              |                         |
-| Logistic Regression          |                  |              |                         |
-| KNN                          |                  |              |                         |
-| Support Vector Machine       |                  |              |                         |
-| Decision Treee               |                  |              |                         |
-| Linear Discriminant Analysis |                  |              |                         |
-| Deep Learning Method         |                  |              |                         |
-| Multilayer Perceptron        |                  |              |                         |
+- The left side of the arrow is the result without feature selection, and the right side of the arrow is the result
+  after feature selection.
 
+- `no feature selecton result  `**---->** ` feature selection result `
+- `'DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is','Ir'` **--->** `'DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'feature 1']`
+
+| R2 score                     | training dataset | test dataset   |
+| ---------------------------- | ---------------- | -------------- |
+| **Machine Learning Method**  |                  |                |
+| Normal Linear Regression     | 0.236 -> 0.272   | 0.236 -> 0.276 |
+| Ridge Regression             | 0.236 -> 0.272   | 0.238 -> 0.276 |
+| LASSO Regression             | 0.233 -> 0.270   | 0.236 -> 0.274 |
+| Random Forset Regression     | 0.623 -> 0.671   | 0.461 -> 0.522 |
+| Extra Trees Regression       | 0.977 -> 0.981   | 0.398 -> 0.477 |
+| Gradient Boosting Regression | 0.388 -> 0.436   | 0.386 -> 0.437 |
+| Support Vector Machine       | 0.238 -> 0.277   | 0.240 -> 0.281 |
+| **Deep Learning Method**     |                  |                |
+| Artifical Neural Network     | 0.454 -> 0.510   | 0.419 -> 0.483 |
+| Long Short Term Memory Model | 0.804 -> 0.872   | 0.729 -> 0.813 |
+
+![reg](report_images/rna.png)
+
+| F1 score                     | training dataset | test dataset   | cross validation result |
+| ---------------------------- | ---------------- | -------------- | ----------------------- |
+| **Machine Learning Method**  |                  |                |                         |
+| Logistic Regression          | 0.652 -> 0.646   | 0.645 -> 0.643 | 0.610 -> 0.627          |
+| KNN                          | 0.727 -> 0.740   | 0.650 -> 0.665 | 0.620 -> 0.634         |
+| Support Vector Machine       | 0.664 -> 0.671   | 0.659 -> 0.658 | 0.635 -> 0.645         |
+| Decision Treee               | 0.763 -> 0.756   | 0.638 -> 0.652 | 0.601 -> 0.613          |
+| Linear Discriminant Analysis | 0.648 -> 0.645   | 0.644 -> 0.642 | 0.609 -> 0.628          |
+| **Deep Learning Method**     |                  |                |                         |
+| Multilayer Perceptron        | 0.719 -> 0.734   | 0.700 -> 0.671 | 0.619 -> 0.634          |
+
+![reg](report_images/cna.png)
 ### Other dataset
 
-| R2 score for CV              | Mean Value | Median Value | Mode Value | KNN  | Interpolate |
-| ---------------------------- | ---------- | ------------ | ---------- | ---- | ----------- |
-| **Machine Learning Method**  |            |              |            |      |             |
-| Normal Linear Regression     |            |              |            |      |             |
-| Ridge Regression             |            |              |            |      |             |
-| LASSO Regression             |            |              |            |      |             |
-| Random Forset Regression     |            |              |            |      |             |
-| Extra Trees Regression       |            |              |            |      |             |
-| Gradient Boosting Regression |            |              |            |      |             |
-| Support Vector Machine       |            |              |            |      |             |
-| **Deep Learning Method**     |            |              |            |      |             |
-| Artifical Neural Network     |            |              |            |      |             |
-| Long Short Term Memory Model |            |              |            |      |             |
+| R2 score for CV              | Zero  | Mean Value | Median Value | Mode Value | KNN   | Interpolate |
+| ---------------------------- | ----- | ---------- | ------------ | ---------- | ----- | ----------- |
+| **Machine Learning Method**  |       |            |              |            |       |             |
+| Normal Linear Regression     | 0.231 | 0.244      | 0.243        | 0.235      | 0.259 | 0.251       |
+| LASSO Regression             | 0.229 | 0.241      | 0.240        | 0.232      | 0.257 | 0.248       |
+| Random Forset Regression     | 0.439 | 0.452      | 0.452        | 0.442      | 0.475 | 0.460       |
+| Extra Trees Regression       | 0.379 | 0.401      | 0.399        | 0.385      | 0.432 | 0.409       |
+| Gradient Boosting Regression | 0.355 | 0.372      | 0.372        | 0.361      | 0.392 | 0.379       |
+| **Deep Learning Method**     |       |            |              |            |       |             |
+| Artifical Neural Network     | 0.393 | 0.404      | 0.428        | 0.407      | 0.446 | 0.434       |
 
 ### cross validation
 
-To verify the robustness of our model, we use a cross-validation method. The specific method used is KFold
-
-KFold.
+To verify the robustness of our model, we use a cross-validation method. The specific method used is KFold.
 
 ## 6.Conclusion
 
