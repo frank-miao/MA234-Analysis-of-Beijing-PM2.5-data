@@ -107,5 +107,5 @@ def load_data(data: pd.DataFrame, selected_feature: list):
 
 
 if __name__ == '__main__':
-    features = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir', 'feature 1', 'feature 2']
+    features = ['DEWP', 'TEMP', 'PRES', 'cbwd', 'Iws', 'Is', 'Ir', 'feature 1']
     print(Mutual_Information_feature_selection(pd.read_csv('new_feature.csv'), features))
