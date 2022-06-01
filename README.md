@@ -2,11 +2,43 @@
 
 > 11911819 缪方然 11911915 曹书伟
 
-[toc]
+* [REPORT on Introduction to Theoretical and Practical Data Science](#report-on-introduction-to-theoretical-and-practical-data-science)
+  * [Briefly Introduction](#briefly-introduction)
+    * [Introduction](#introduction)
+    * [Github Link](#github-link)
+  * [0.Check List](#0check-list)
+    * [Task1](#task1)
+    * [Task2](#task2)
+    * [Task3](#task3)
+    * [Task4](#task4)
+    * [Task5(optional)](#task5optional)
+  * [1.Data exploration](#1data-exploration)
+    * [data statistics](#data-statistics)
+    * [data visualization](#data-visualization)
+  * [2.Data preprocessing](#2data-preprocessing)
+    * [dataset partition](#dataset-partition)
+      * [regression dataset](#regression-dataset)
+      * [classification dataset](#classification-dataset)
+    * [detecting missing values](#detecting-missing-values)
+    * [data conversion](#data-conversion)
+    * [data normalization](#data-normalization)
+    * [data imputation](#data-imputation)
+  * [3.Model construction](#3model-construction)
+    * [Regression](#regression)
+    * [Classification](#classification)
+  * [4.Feature selection and Model selection and Feature creation](#4feature-selection-and-model-selection-and-feature-creation)
+    * [Feature selection](#feature-selection)
+    * [Feature creation](#feature-creation)
+    * [Model selection](#model-selection)
+  * [5.Model evaluation](#5model-evaluation)
+    * [dropna dataset](#dropna-dataset)
+    * [Other dataset](#other-dataset)
+    * [cross validation](#cross-validation)
+  * [6.Conclusion](#6conclusion)
 
 ## Briefly Introduction
 
-#### Introduction
+### Introduction
 
 The purpose of our project is to predict the value of pm2.5 in Beijing for a specific time period based on existing
 features.
@@ -20,7 +52,7 @@ problem, and five machine learning models and one deep learning model for the cl
 Finally, in the regression model, our cross-validation prediction accuracy can reach up to (using LSTM model) in the
 classification model, our cross-validation accuracy can finally reach (using xxx model)
 
-#### Github Link
+### Github Link
 
 https://github.com/UtoKing/MA234
 
@@ -377,7 +409,6 @@ the accuracy of the model is improved after feature analysis and feature selecti
 | Artifical Neural Network     | 0.454 -> 0.510   | 0.419 -> 0.483 |
 | Long Short Term Memory Model | 0.804 -> 0.872   | 0.729 -> 0.813 |
 
-![reg](report_images/rna.png)
 
 | F1 score                     | training dataset | test dataset   | cross validation result |
 | ---------------------------- | ---------------- | -------------- | ----------------------- |
@@ -390,7 +421,6 @@ the accuracy of the model is improved after feature analysis and feature selecti
 | **Deep Learning Method**     |                  |                |                         |
 | Multilayer Perceptron        | 0.719 -> 0.734   | 0.700 -> 0.671 | 0.619 -> 0.634          |
 
-![reg](report_images/cna.png)
 
 ### Other dataset
 
