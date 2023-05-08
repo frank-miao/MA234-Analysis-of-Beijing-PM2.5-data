@@ -125,7 +125,7 @@ Here we draw some diagrams to show the insight of the data.
 
 * **Hist diagram of the to-predict value--pm2.5**
 
-  <img height="300" src=".\report_images\pm25_hist.svg" width="500"/>
+  <img height="300" src="./report_images/pm25_hist.svg" width="500"/>
 
   The diagram shows that the value of pm2.5 are mainly in the range of 0 to 165.
   Although pm2.5 above 500 is merely extinct in the diagram, there are still few of them. (About 20 and even less)
@@ -133,7 +133,7 @@ Here we draw some diagrams to show the insight of the data.
 
 * **Bar diagram of cbwd**
 
-  <img height="300" src=".\report_images\cbwd_bar.svg" width="500"/>
+  <img height="300" src="./report_images/cbwd_bar.svg" width="500"/>
 
   The diagram shows that the southeastern and northwestern wind often blow in Beijing,
   and it hardly appears southwestern wind.
